@@ -313,9 +313,9 @@
           "team2": "Dhruv And Sree Pavan",
           "category": "Advanced",
           "group": "Group A",
-          "status": "completed",
-          "score1": 7,
-          "score2": 0
+          "status": null,
+          "score1": null,
+          "score2": null
         },
         {
           "id": "match_1780682229926_t6bokxgrm",
