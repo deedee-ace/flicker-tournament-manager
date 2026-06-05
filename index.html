@@ -1,0 +1,4591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flicker — Tournament Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0D0A12;
+  --surface: #16121E;
+  --surface-hover: #1E1828;
+  --border: #2A2238;
+  --gold: #D4A853;
+  --gold-dim: rgba(212, 168, 83, 0.12);
+  --gold-glow: rgba(212, 168, 83, 0.25);
+  --purple: #9B5DE5;
+  --purple-dim: rgba(155, 93, 229, 0.15);
+  --text: #F0EBE1;
+  --text-dim: #8A7E9E;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+
+.app {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 16px 24px 32px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ─── Header ─── */
+
+header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 24px;
+  letter-spacing: -.02em;
+  color: var(--text);
+  text-decoration: none;
+  position: relative;
+}
+
+.logo-shuttle {
+  display: inline-block;
+  font-size: 22px;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px var(--gold-glow));
+}
+
+.logo-flicker {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tagline {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  font-weight: 300;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 28px;
+  letter-spacing: -.02em;
+  color: var(--text);
+  text-decoration: none;
+  position: relative;
+}
+
+.logo-shuttle {
+  display: inline-block;
+  font-size: 26px;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px var(--gold-glow));
+}
+
+.logo-flicker {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tagline {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 8px;
+  font-weight: 300;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+/* ─── Empty State ─── */
+
+.empty-state {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.empty-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 16px;
+  opacity: .6;
+  filter: drop-shadow(0 0 20px var(--gold-glow));
+}
+
+.empty-state h2 {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 24px;
+  margin-bottom: 8px;
+  letter-spacing: -.02em;
+  line-height: 1.2;
+}
+
+.empty-state p {
+  color: var(--text-dim);
+  font-size: 14px;
+  margin-bottom: 24px;
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.empty-icon {
+  font-size: 72px;
+  display: block;
+  margin-bottom: 24px;
+  opacity: .6;
+  filter: drop-shadow(0 0 20px var(--gold-glow));
+}
+
+.empty-state h2 {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 32px;
+  margin-bottom: 12px;
+  letter-spacing: -.02em;
+  line-height: 1.2;
+}
+
+.empty-state p {
+  color: var(--text-dim);
+  font-size: 16px;
+  margin-bottom: 36px;
+  max-width: 380px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ─── Buttons ─── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: all .25s ease;
+  position: relative;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold), var(--purple));
+  color: #0F0D09;
+  padding: 14px 36px;
+  border-radius: var(--radius-sm);
+  letter-spacing: .01em;
+  box-shadow: 0 4px 20px var(--gold-glow);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--gold-glow);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-dim);
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.btn-ghost:hover {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--gold);
+}
+
+.btn-small {
+  padding: 8px 20px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+/* ─── Tournament List ─── */
+
+.tournament-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tournament-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.tournament-list-header h2 {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 16px;
+  letter-spacing: -.01em;
+  color: var(--text-dim);
+}
+
+.tournament-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px 14px 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tournament-card:hover {
+  background: var(--surface-hover);
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,.3);
+}
+
+.tournament-card:active {
+  transform: translateY(0);
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--gold-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  border: 1px solid rgba(212, 168, 83, 0.15);
+}
+
+.card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-body h3 {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 15px;
+  letter-spacing: -.01em;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-body .venue {
+  font-size: 12px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.card-arrow {
+  color: var(--text-dim);
+  font-size: 18px;
+  transition: transform .3s ease, color .3s ease;
+}
+
+.tournament-card:hover .card-arrow {
+  color: var(--gold);
+  transform: translateX(4px);
+}
+
+.card-delete {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%) scale(.8);
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  line-height: 1;
+  transition: all .2s ease;
+  opacity: 0;
+  z-index: 1;
+}
+
+.tournament-card:hover .card-delete {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+.card-delete:hover {
+  background: rgba(155, 93, 229, .15);
+  color: var(--purple);
+}
+
+/* ─── Schedule ─── */
+
+.schedule-layout {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.schedule-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.schedule-panel {
+  width: 280px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  position: sticky;
+  top: 16px;
+}
+
+.schedule-panel h3 {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-bottom: 8px;
+}
+
+.schedule-panel-section {
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.schedule-panel-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.field-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.field-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.field-item-name {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.field-item-time {
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+.field-item-actions {
+  display: flex;
+  gap: 2px;
+}
+
+.field-item-actions button {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.field-item-actions button:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.add-field-row {
+  display: flex;
+  gap: 4px;
+}
+
+.add-field-row input {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  padding: 6px 8px;
+}
+
+.add-field-row input[type="time"] {
+  width: 90px;
+  flex: none;
+}
+
+.add-field-row input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.9) brightness(1.2);
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.add-field-row input[type="time"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.checkbox-item input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  accent-color: var(--gold);
+}
+
+.checkbox-item-all {
+  font-weight: 600;
+  color: var(--gold);
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2px;
+}
+
+.select-field {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.btn-generate {
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.fields-display {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.fields-display::-webkit-scrollbar {
+  height: 6px;
+}
+
+.fields-display::-webkit-scrollbar-track {
+  background: var(--bg);
+  border-radius: 3px;
+}
+
+.fields-display::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.fields-display::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+.field-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex: 0 0 300px;
+  min-width: 300px;
+}
+
+.field-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: var(--gold-dim);
+  border-bottom: 1px solid var(--border);
+}
+
+.field-card-title {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.field-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-clear-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-dim);
+  font-size: 11px;
+  padding: 3px 8px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.field-clear-btn:hover {
+  background: var(--surface-hover);
+  color: var(--purple);
+  border-color: var(--purple);
+}
+
+.field-card-time {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.field-card-time input[type="time"] {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 11px;
+  font-family: inherit;
+  cursor: pointer;
+  width: 90px;
+  padding: 2px 6px;
+}
+
+.field-card-time input[type="time"]:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.field-card-time input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.9) brightness(1.2);
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.field-card-time input[type="time"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.match-list {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 60px;
+}
+
+.match-list.drag-over {
+  background: var(--gold-dim);
+}
+
+.match-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px;
+  cursor: grab;
+  user-select: none;
+  position: relative;
+}
+
+.match-card-delete {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 6px;
+  opacity: 0;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.match-card:hover .match-card-delete {
+  opacity: 1;
+}
+
+.match-card-delete:hover {
+  color: var(--purple);
+}
+
+/* ─── Break Card ─── */
+
+.break-card {
+  background: linear-gradient(135deg, var(--purple-dim) 0%, rgba(155, 93, 229, 0.08) 100%);
+  border: 1px dashed var(--purple);
+  cursor: default;
+}
+
+.match-card-break-label {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 12px;
+  color: var(--purple);
+  letter-spacing: .05em;
+  margin-bottom: 4px;
+}
+
+.match-card-break-duration {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.match-card-break-duration input {
+  width: 40px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--text);
+  outline: none;
+}
+
+.match-card-break-duration input:focus {
+  border-color: var(--purple);
+}
+
+.match-card-break-duration span {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.add-break-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  background: transparent;
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  color: var(--text-dim);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-break-btn:hover {
+  border-color: var(--purple);
+  color: var(--purple);
+  background: var(--purple-dim);
+}
+
+.match-card:active {
+  cursor: grabbing;
+}
+
+.match-card.dragging {
+  opacity: 0.5;
+}
+
+.match-card-time {
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.match-card-teams {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.match-card-teams .vs {
+  color: var(--text-dim);
+  font-weight: 400;
+  margin: 0 4px;
+}
+
+.match-card-pill {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.empty-field {
+  text-align: center;
+  padding: 16px 8px;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-style: italic;
+}
+
+@media (max-width: 900px) {
+  .schedule-layout {
+    flex-direction: column;
+  }
+  .schedule-panel {
+    width: 100%;
+    position: static;
+  }
+  .field-card {
+    flex: 0 0 260px;
+    min-width: 260px;
+  }
+}
+
+/* ─── Participants Tab ─── */
+
+.add-cat-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.add-cat-row input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+}
+
+.add-cat-row input:focus {
+  border-color: var(--gold);
+}
+
+.cat-tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.cat-tabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.cat-tabs::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.cat-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-dim);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.cat-tab:hover {
+  color: var(--text);
+}
+
+.cat-tab.active {
+  border-bottom-color: var(--gold);
+}
+
+.cat-edit {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  opacity: 0.5;
+}
+
+.cat-tab:hover .cat-edit {
+  opacity: 1;
+}
+
+.cat-edit:hover {
+  background: var(--surface-hover);
+  color: var(--gold);
+}
+
+.team-list-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.team-item-compact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+}
+
+.team-icon-sm {
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+.team-name-sm {
+  flex: 1;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.team-delete-sm, .team-edit-sm {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  opacity: 0;
+}
+
+.team-item-compact:hover .team-delete-sm,
+.team-item-compact:hover .team-edit-sm {
+  opacity: 1;
+}
+
+.team-edit-sm:hover {
+  background: rgba(212, 168, 83, .15);
+  color: var(--gold);
+}
+
+.team-delete-sm:hover {
+  background: rgba(155, 93, 229, .15);
+  color: var(--purple);
+}
+
+/* ─── Scoring Tab ─── */
+
+@keyframes beat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(42, 157, 143, 0.3), inset 0 0 8px rgba(42, 157, 143, 0.05); }
+  50% { box-shadow: 0 0 20px rgba(42, 157, 143, 0.5), inset 0 0 12px rgba(42, 157, 143, 0.08); }
+}
+
+.scoring-match-card.scoring-card-ongoing {
+  border-color: rgba(42, 157, 143, 0.4);
+  animation: glow-pulse 1.5s ease-in-out infinite;
+}
+
+.scoring-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.scoring-match-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.scoring-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.scoring-card-field {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.scoring-card-time {
+  font-size: 18px;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.scoring-card-teams {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scoring-team {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+  padding: 8px 12px;
+  background: var(--bg);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: background 0.2s ease;
+}
+
+.scoring-team-winner {
+  background: rgba(212, 168, 83, 0.1);
+  border-left: 3px solid var(--gold);
+}
+
+.scoring-team-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.scoring-team-name {
+  flex: 1;
+}
+
+.scoring-team-chip {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  padding: 2px 6px;
+  border-radius: 8px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.scoring-team-score {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.scoring-score-input {
+  width: 45px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  font-family: inherit;
+  -moz-appearance: textfield;
+}
+
+.scoring-score-input::-webkit-outer-spin-button,
+.scoring-score-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.scoring-score-input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.scoring-score-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.scoring-score-controls {
+  display: none;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.scoring-score-controls.visible {
+  display: flex;
+}
+
+.scoring-score-btn {
+  width: 18px;
+  height: 14px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+  padding: 0;
+}
+
+.scoring-score-btn-plus {
+  background: rgba(42, 157, 143, 0.15);
+  color: #2A9D8F;
+  border-color: rgba(42, 157, 143, 0.3);
+}
+
+.scoring-score-btn-plus:hover {
+  background: #2A9D8F;
+  color: var(--bg);
+  border-color: #2A9D8F;
+}
+
+.scoring-score-btn-minus {
+  background: rgba(224, 112, 124, 0.15);
+  color: #E0707C;
+  border-color: rgba(224, 112, 124, 0.3);
+}
+
+.scoring-score-btn-minus:hover {
+  background: #E0707C;
+  color: var(--bg);
+  border-color: #E0707C;
+}
+
+.scoring-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.scoring-card-footer-left {
+  display: flex;
+  gap: 8px;
+}
+
+.scoring-card-pill {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.scoring-break-card {
+  background: linear-gradient(135deg, var(--purple-dim) 0%, rgba(155, 93, 229, 0.08) 100%);
+  border: 1px dashed var(--purple);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.scoring-break-label {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 14px;
+  color: var(--purple);
+  letter-spacing: .05em;
+}
+
+.scoring-break-duration {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.scoring-break-duration input {
+  width: 40px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--text);
+  outline: none;
+}
+
+.scoring-break-duration input:focus {
+  border-color: var(--purple);
+}
+
+.btn-ongoing {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-dim);
+  font-size: 10px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.btn-ongoing:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.btn-ongoing.is-ongoing {
+  background: rgba(42, 157, 143, 0.15);
+  border-color: #2A9D8F;
+  color: #2A9D8F;
+  animation: beat 1s ease-in-out infinite;
+}
+
+.btn-ongoing.is-completed {
+  background: transparent;
+  border-color: var(--gold);
+  color: var(--gold);
+  cursor: default;
+  animation: none;
+}
+
+.btn-reset {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-dim);
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-reset:hover {
+  background: rgba(155, 93, 229, .15);
+  border-color: var(--purple);
+  color: var(--purple);
+}
+
+.scoring-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+@media (max-width: 1200px) {
+  .scoring-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .scoring-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .scoring-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Rankings Tab ─── */
+
+.rankings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ranking-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.ranking-section-header {
+  padding: 14px 20px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 16px;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+
+.ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ranking-table th {
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--text-dim);
+  background: var(--bg);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.ranking-table td {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.ranking-table tr:last-child td {
+  border-bottom: none;
+}
+
+.ranking-table .rank-cell {
+  font-weight: 700;
+  color: var(--gold);
+  width: 40px;
+}
+
+.ranking-table .team-cell {
+  font-weight: 600;
+}
+
+.ranking-table .wins-cell {
+  color: #2A9D8F;
+  font-weight: 600;
+}
+
+.ranking-table .points-cell {
+  font-weight: 700;
+  color: var(--gold);
+  font-size: 16px;
+}
+
+.ranking-table th:not(:first-child):not(:nth-child(2)),
+.ranking-table td:not(:first-child):not(:nth-child(2)) {
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .ranking-table th,
+  .ranking-table td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  
+  .ranking-table .points-cell {
+    font-size: 14px;
+  }
+}
+
+/* ─── Modal ─── */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .35s ease, visibility .35s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px 32px 32px;
+  width: 100%;
+  max-width: 460px;
+  transform: scale(.92) translateY(12px);
+  transition: transform .4s cubic-bezier(.22,1,.36,1);
+}
+
+.modal-overlay.active .modal {
+  transform: scale(1) translateY(0);
+}
+
+.modal h2 {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 24px;
+  margin-bottom: 6px;
+  letter-spacing: -.02em;
+}
+
+.modal p {
+  color: var(--text-dim);
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.form-group input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  color: var(--text);
+  outline: none;
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+.form-group input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-dim);
+}
+
+.form-group input::placeholder {
+  color: #4A4138;
+}
+
+.form-group select {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  color: var(--text);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%238A7E6E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+.form-group select:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-dim);
+}
+
+.form-group select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  padding: 14px 36px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.btn-secondary:hover {
+  border-color: var(--gold);
+  background: var(--surface-hover);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.modal-actions .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+/* ─── Custom Prompt/Confirm Modal ─── */
+
+.custom-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .2s ease, visibility .2s ease;
+}
+
+.custom-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.custom-modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px 24px;
+  width: 100%;
+  max-width: 400px;
+  transform: scale(.92) translateY(12px);
+  transition: transform .3s cubic-bezier(.22,1,.36,1);
+}
+
+.custom-modal-overlay.active .custom-modal {
+  transform: scale(1) translateY(0);
+}
+
+.custom-modal-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 20px;
+  margin-bottom: 8px;
+  letter-spacing: -.02em;
+  color: var(--text);
+}
+
+.custom-modal-message {
+  color: var(--text-dim);
+  font-size: 14px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.custom-modal-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  outline: none;
+  margin-bottom: 20px;
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+.custom-modal-input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-dim);
+}
+
+.custom-modal-input::placeholder {
+  color: #4A4138;
+}
+
+.custom-modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.custom-modal-actions .btn {
+  flex: 1;
+  justify-content: center;
+  padding: 12px 20px;
+  font-size: 14px;
+}
+
+.custom-modal-actions .btn-cancel {
+  background: var(--surface-hover);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+
+.custom-modal-actions .btn-cancel:hover {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+
+.custom-modal-actions .btn-confirm {
+  background: var(--gold);
+  color: var(--bg);
+  border: 1px solid var(--gold);
+}
+
+.custom-modal-actions .btn-confirm:hover {
+  background: var(--purple);
+  border-color: var(--purple);
+}
+
+.custom-modal-actions .btn-danger {
+  background: rgba(155, 93, 229, .15);
+  color: var(--purple);
+  border: 1px solid rgba(155, 93, 229, .3);
+}
+
+.custom-modal-actions .btn-danger:hover {
+  background: rgba(155, 93, 229, .25);
+  border-color: var(--purple);
+}
+
+
+/* ─── Skeleton ─── */
+
+.skeleton {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.skeleton-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.skeleton-lines {
+  flex: 1;
+}
+
+.skeleton-line {
+  height: 14px;
+  background: var(--border);
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.skeleton-line:last-child {
+  width: 60%;
+  margin-bottom: 0;
+}
+
+/* ─── Empty Message ─── */
+
+.empty-msg {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+/* ─── Detail View ─── */
+
+.detail-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.btn-back {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all .25s ease;
+}
+
+.btn-back:hover {
+  border-color: var(--gold);
+  background: var(--surface-hover);
+  transform: translateX(-2px);
+}
+
+.detail-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 22px;
+  letter-spacing: -.02em;
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+
+.detail-venue {
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+/* ─── Tab Bar ─── */
+
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.tab {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all .25s ease;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.tab:hover {
+  color: var(--text);
+}
+
+.tab.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+/* ─── Detail Sections ─── */
+
+.detail-section {
+  margin-bottom: 20px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.section-header h2 {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 16px;
+  letter-spacing: -.01em;
+  color: var(--text-dim);
+}
+
+.tab {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all .25s ease;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.tab:hover {
+  color: var(--text);
+}
+
+.tab.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+/* ─── Detail Sections ─── */
+
+.detail-section {
+  margin-bottom: 36px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.section-header h2 {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 16px;
+  letter-spacing: -.01em;
+  color: var(--text);
+}
+
+.empty-hint {
+  color: var(--text-dim);
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* ─── Category Chips ─── */
+
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--gold-dim);
+  border: 1px solid rgba(212, 168, 83, .2);
+  border-radius: 100px;
+  padding: 6px 12px 6px 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.chip-delete {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  border-radius: 4px;
+  transition: all .2s ease;
+}
+
+.chip-delete:hover {
+  color: var(--purple);
+  background: rgba(155, 93, 229, .15);
+}
+
+/* ─── Team List ─── */
+
+.team-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.team-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  transition: all .2s ease;
+}
+
+.team-item:hover {
+  border-color: rgba(212, 168, 83, .3);
+}
+
+.team-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  opacity: .6;
+}
+
+.team-name {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+  min-width: 0;
+}
+
+.team-category {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: var(--gold-dim);
+  color: var(--gold);
+  border: 1px solid rgba(212, 168, 83, .2);
+  flex-shrink: 0;
+}
+
+.team-delete {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  line-height: 1;
+  transition: all .2s ease;
+  opacity: 0;
+}
+
+.team-item:hover .team-delete {
+  opacity: 1;
+}
+
+.team-delete:hover {
+  color: var(--purple);
+  background: rgba(155, 93, 229, .15);
+}
+
+/* ─── Inline Add Row ─── */
+
+.add-row {
+  display: flex;
+  gap: 8px;
+}
+
+.add-row input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color .25s ease;
+}
+
+.add-row input:focus {
+  border-color: var(--gold);
+}
+
+.add-row input::placeholder {
+  color: #4A4138;
+}
+
+.add-row .btn {
+  flex-shrink: 0;
+}
+
+/* ─── Bulk Area ─── */
+
+.bulk-area {
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.bulk-area label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.bulk-area textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color .25s ease;
+  margin-bottom: 10px;
+}
+
+.bulk-area textarea:focus {
+  border-color: var(--gold);
+}
+
+.bulk-area textarea::placeholder {
+  color: #4A4138;
+}
+
+/* ─── Format Tab ─── */
+
+.format-selector {
+  margin-bottom: 24px;
+}
+
+.format-selector label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 6px;
+}
+
+.format-selector select {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%238A7E6E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+  transition: border-color .25s ease;
+}
+
+.format-selector select:focus {
+  border-color: var(--gold);
+}
+
+.format-selector select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.format-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 32px 0;
+  text-align: center;
+}
+
+.format-options p {
+  color: var(--text-dim);
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.format-options .btn {
+  justify-content: center;
+  padding: 16px 32px;
+  font-size: 15px;
+}
+
+.format-duration-setting {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+}
+
+.format-duration-setting label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.format-duration-setting input {
+  width: 80px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color .2s ease;
+}
+
+.format-duration-setting input:focus {
+  border-color: var(--gold);
+}
+
+/* ─── Horizontal Phase Layout ─── */
+
+.format-phases {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  align-items: flex-start;
+}
+
+.format-phases::-webkit-scrollbar {
+  height: 6px;
+}
+
+.format-phases::-webkit-scrollbar-track {
+  background: var(--bg);
+  border-radius: 3px;
+}
+
+.format-phases::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.format-phases::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+.format-phase-column {
+  flex: 0 0 280px;
+  min-width: 280px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: visible;
+}
+
+.format-phase-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--gold-dim);
+  border-bottom: 1px solid var(--border);
+}
+
+.format-phase-title {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.format-phase-delete {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.format-phase-delete:hover {
+  background: rgba(155, 93, 229, .15);
+  color: var(--purple);
+}
+
+.format-phase-content {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: visible;
+}
+
+.format-phase-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.format-phase-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.format-phase-actions button {
+  width: 100%;
+  padding: 8px;
+  font-size: 12px;
+}
+
+/* ─── Bracket Styles ─── */
+
+.bracket-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bracket-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 16px;
+  color: var(--gold);
+  letter-spacing: -.01em;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.bracket-matches {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bracket-match-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bracket-match-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--text-dim);
+}
+
+.bracket-match-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.bracket-slot-select {
+  width: 100%;
+  font-size: 13px;
+}
+
+.format-add-phase-column {
+  flex: 0 0 200px;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.format-add-phase-column:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-dim);
+}
+
+.phase-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.phase-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.phase-header h3 {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 15px;
+  letter-spacing: -.01em;
+}
+
+.phase-groups {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.phase-groups::-webkit-scrollbar {
+  height: 6px;
+}
+
+.phase-groups::-webkit-scrollbar-track {
+  background: var(--bg);
+  border-radius: 3px;
+}
+
+.phase-groups::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.phase-groups::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+.group-card {
+  flex: 0 0 240px;
+  min-width: 240px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: visible;
+}
+
+.group-card-header {
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.group-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.group-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.group-table tr:last-child td {
+  border-bottom: none;
+}
+
+.slot-empty {
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all .2s ease;
+  font-style: italic;
+  user-select: none;
+}
+
+.slot-empty:hover {
+  color: var(--gold);
+  background: var(--gold-dim);
+}
+
+.slot-select {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font: inherit;
+  font-size: 14px;
+  font-style: italic;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  color-scheme: dark;
+}
+
+.slot-select:hover {
+  color: var(--gold);
+}
+
+.slot-select option {
+  color: var(--text);
+  background: var(--bg);
+  font-style: normal;
+}
+
+.slot-filled {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.add-group-btn {
+  margin-top: 12px;
+  width: 100%;
+  justify-content: center;
+  padding: 10px;
+  font-size: 13px;
+}
+
+/* ─── Team Picker ─── */
+
+.picker-list {
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.picker-item {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  transition: all .2s ease;
+}
+
+.picker-item:hover {
+  border-color: var(--gold);
+  background: var(--gold-dim);
+}
+
+.picker-item.picker-disabled {
+  opacity: .3;
+  cursor: default;
+  pointer-events: none;
+}
+
+.picker-empty {
+  color: var(--text-dim);
+  font-size: 14px;
+  text-align: center;
+  padding: 24px 0;
+}
+
+/* ─── Desktop Expansion ─── */
+
+@media (min-width: 800px) {
+  .app {
+    max-width: 1500px;
+    padding: 32px 40px 60px;
+  }
+  .phase-groups {
+    gap: 20px;
+  }
+  .group-card {
+    flex: 1 1 240px;
+  }
+}
+
+/* ─── Responsive ─── */
+
+@media (max-width: 520px) {
+  .app { padding: 24px 16px 60px; }
+  .empty-state h2 { font-size: 26px; }
+  .modal { padding: 28px 20px 24px; }
+  .tournament-card { padding: 16px 18px; }
+  .card-icon { width: 40px; height: 40px; font-size: 18px; }
+  .detail-title { font-size: 22px; }
+  .tab { padding: 10px 14px; font-size: 13px; }
+  .group-card { flex: 1 1 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+  <header>
+    <div class="logo">
+      <span class="logo-shuttle">🏸</span>
+      <span class="logo-flicker">Flicker</span>
+    </div>
+    <p class="tagline">Badminton Tournament Manager</p>
+  </header>
+
+  <div id="content"></div>
+</div>
+
+<!-- Tournament Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2>New Tournament</h2>
+    <p>Set up your tournament in seconds.</p>
+    <form id="tournamentForm">
+      <div class="form-group">
+        <label for="name">Tournament Name</label>
+        <input type="text" id="name" placeholder="e.g. Wimbledon Open" required>
+      </div>
+      <div class="form-group">
+        <label for="venue">Venue</label>
+        <input type="text" id="venue" placeholder="e.g. Sports Complex">
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="cancelBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create Tournament</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Team Modal -->
+<div class="modal-overlay" id="teamModal">
+  <div class="modal">
+    <h2>Add Teams</h2>
+    <p>Add teams to a category.</p>
+    <form id="teamForm">
+      <div class="form-group">
+        <label for="teamCategory">Category</label>
+        <select id="teamCategory"></select>
+      </div>
+      <div class="form-group">
+        <label for="teamName">Team Name</label>
+        <input type="text" id="teamName" placeholder="e.g. Team Alpha">
+      </div>
+      <div class="form-group">
+        <label for="teamBulk">Bulk Add <span style="color:var(--text-dim);font-weight:400;text-transform:none;letter-spacing:0">— one per line</span></label>
+        <textarea id="teamBulk" placeholder="Team Alpha&#10;Team Beta&#10;Team Gamma" rows="4" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;resize:vertical;min-height:80px;transition:border-color .25s ease"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="teamCancelBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add Teams</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Format Setup Modal -->
+<div class="modal-overlay" id="formatModal">
+  <div class="modal">
+    <h2 id="formatModalTitle">Group Stage Setup</h2>
+    <p>Configure the group stage.</p>
+    <form id="formatForm">
+      <div class="form-group">
+        <label for="groupCount">Number of Groups</label>
+        <input type="number" id="groupCount" value="2" min="1" max="20">
+      </div>
+      <div class="form-group">
+        <label for="teamsPerGroup">Teams per Group</label>
+        <input type="number" id="teamsPerGroup" value="5" min="1" max="50">
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="formatCancelBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Team Picker Modal -->
+<div class="modal-overlay" id="pickerModal">
+  <div class="modal">
+    <h2 id="pickerTitle">Select Team</h2>
+    <p id="pickerSubtitle">Choose a team for this slot.</p>
+    <div class="picker-list" id="pickerList"></div>
+    <div class="modal-actions" style="margin-top:20px">
+      <button type="button" class="btn btn-ghost" id="pickerCancelBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Prompt Modal -->
+<div class="custom-modal-overlay" id="customPromptModal">
+  <div class="custom-modal">
+    <div class="custom-modal-title" id="customPromptTitle"></div>
+    <input type="text" class="custom-modal-input" id="customPromptInput" placeholder="">
+    <div class="custom-modal-actions">
+      <button type="button" class="btn btn-cancel" id="customPromptCancelBtn">Cancel</button>
+      <button type="button" class="btn btn-confirm" id="customPromptConfirmBtn">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Confirm Modal -->
+<div class="custom-modal-overlay" id="customConfirmModal">
+  <div class="custom-modal">
+    <div class="custom-modal-title">Confirm</div>
+    <div class="custom-modal-message" id="customConfirmMessage"></div>
+    <div class="custom-modal-actions">
+      <button type="button" class="btn btn-cancel" id="customConfirmCancelBtn">Cancel</button>
+      <button type="button" class="btn btn-danger" id="customConfirmConfirmBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'flicker_tournaments';
+let view = 'list';
+let selectedIndex = 0;
+let tab = 'participants';
+let formatCat = '';
+let pickerCallback = null;
+
+function getTournaments() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  } catch(e) {
+    return [];
+  }
+}
+
+function saveTournaments(list) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+
+function ensureTournamentData(t) {
+  if (!t.categories) t.categories = [];
+  if (!t.teams) t.teams = [];
+  t.teams = t.teams.map(team => typeof team === 'string' ? { name: team, category: '' } : team);
+  if (!t.formats) t.formats = {};
+  if (!t.schedule) t.schedule = { fields: [], matches: [] };
+  if (!t.schedule.fields) t.schedule.fields = [];
+  if (!t.schedule.matches) t.schedule.matches = [];
+  return t;
+}
+
+const CATEGORY_COLORS = [
+  '#D4A853', '#E76F51', '#2A9D8F', '#9B5DE5', '#F15BB5',
+  '#00BBF9', '#06D6A0', '#FB8500', '#00B4D8', '#E63946',
+];
+
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function getCatColor(categories, name) {
+  const i = categories.indexOf(name);
+  return i === -1 ? CATEGORY_COLORS[0] : CATEGORY_COLORS[i % CATEGORY_COLORS.length];
+}
+
+function escapeHtml(s) {
+  const div = document.createElement('div');
+  div.textContent = s;
+  return div.innerHTML;
+}
+
+/* ─── Custom Modal Helpers ─── */
+
+function customPrompt(title, defaultValue = '', placeholder = '') {
+  return new Promise((resolve) => {
+    const overlay = document.getElementById('customPromptModal');
+    const titleEl = document.getElementById('customPromptTitle');
+    const input = document.getElementById('customPromptInput');
+    const confirmBtn = document.getElementById('customPromptConfirmBtn');
+    const cancelBtn = document.getElementById('customPromptCancelBtn');
+    
+    titleEl.textContent = title;
+    input.value = defaultValue;
+    input.placeholder = placeholder;
+    overlay.classList.add('active');
+    setTimeout(() => input.focus(), 100);
+    
+    const cleanup = () => {
+      overlay.classList.remove('active');
+      confirmBtn.removeEventListener('click', onConfirm);
+      cancelBtn.removeEventListener('click', onCancel);
+      input.removeEventListener('keydown', onKeydown);
+    };
+    
+    const onConfirm = () => {
+      const value = input.value.trim();
+      cleanup();
+      resolve(value || null);
+    };
+    
+    const onCancel = () => {
+      cleanup();
+      resolve(null);
+    };
+    
+    const onKeydown = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        onConfirm();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        onCancel();
+      }
+    };
+    
+    confirmBtn.addEventListener('click', onConfirm);
+    cancelBtn.addEventListener('click', onCancel);
+    input.addEventListener('keydown', onKeydown);
+  });
+}
+
+function customConfirm(message) {
+  return new Promise((resolve) => {
+    const overlay = document.getElementById('customConfirmModal');
+    const msgEl = document.getElementById('customConfirmMessage');
+    const confirmBtn = document.getElementById('customConfirmConfirmBtn');
+    const cancelBtn = document.getElementById('customConfirmCancelBtn');
+    
+    msgEl.textContent = message;
+    overlay.classList.add('active');
+    
+    const cleanup = () => {
+      overlay.classList.remove('active');
+      confirmBtn.removeEventListener('click', onConfirm);
+      cancelBtn.removeEventListener('click', onCancel);
+    };
+    
+    const onConfirm = () => {
+      cleanup();
+      resolve(true);
+    };
+    
+    const onCancel = () => {
+      cleanup();
+      resolve(false);
+    };
+    
+    confirmBtn.addEventListener('click', onConfirm);
+    cancelBtn.addEventListener('click', onCancel);
+  });
+}
+
+function render() {
+  const container = document.getElementById('content');
+  if (view === 'detail') {
+    renderDetail(container);
+  } else {
+    renderList(container);
+  }
+}
+
+/* ─── List View ─── */
+
+function renderList(container) {
+  const tournaments = getTournaments();
+
+  if (tournaments.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <span class="empty-icon">🏸</span>
+        <h2>No tournaments yet</h2>
+        <p>Create your first badminton tournament and start managing matches.</p>
+        <button class="btn btn-primary" onclick="openModal()">Create Tournament</button>
+      </div>
+    `;
+    return;
+  }
+
+  const cards = tournaments.map((t, i) => `
+    <div class="tournament-card" data-index="${i}">
+      <button class="card-delete" data-index="${i}" aria-label="Delete tournament">✕</button>
+      <div class="card-icon">🏸</div>
+      <div class="card-body">
+        <h3>${escapeHtml(t.name)}</h3>
+        <div class="venue">${t.venue ? escapeHtml(t.venue) : 'No venue set'}</div>
+      </div>
+      <span class="card-arrow">→</span>
+    </div>
+  `).join('');
+
+  container.innerHTML = `
+    <div class="tournament-list-header">
+      <h2>Tournaments (${tournaments.length})</h2>
+      <button class="btn btn-ghost btn-small" onclick="openModal()">+ New</button>
+    </div>
+    <div class="tournament-list">${cards}</div>
+  `;
+
+  container.querySelectorAll('.tournament-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.card-delete')) return;
+      selectedIndex = parseInt(card.dataset.index);
+      view = 'detail';
+      render();
+    });
+  });
+
+  container.querySelectorAll('.card-delete').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const i = parseInt(btn.dataset.index);
+      const list = getTournaments();
+      if (!await customConfirm(`Delete "${list[i].name}"?`)) return;
+      list.splice(i, 1);
+      saveTournaments(list);
+      render();
+    });
+  });
+}
+
+/* ─── Detail View ─── */
+
+function renderDetail(container) {
+  const tournaments = getTournaments();
+  const t = ensureTournamentData(tournaments[selectedIndex]);
+  if (!t) { view = 'list'; render(); return; }
+
+  container.innerHTML = `
+    <div class="detail-header">
+      <button class="btn-back" id="backBtn">←</button>
+      <div>
+        <h1 class="detail-title">${escapeHtml(t.name)}</h1>
+        <p class="detail-venue">${t.venue ? escapeHtml(t.venue) : 'No venue set'}</p>
+      </div>
+    </div>
+    <div class="tab-bar">
+      <button class="tab ${tab === 'participants' ? 'active' : ''}" data-tab="participants">Participants</button>
+      <button class="tab ${tab === 'format' ? 'active' : ''}" data-tab="format">Format</button>
+      <button class="tab ${tab === 'schedule' ? 'active' : ''}" data-tab="schedule">Schedule</button>
+      <button class="tab ${tab === 'scoring' ? 'active' : ''}" data-tab="scoring">Scoring</button>
+      <button class="tab ${tab === 'rankings' ? 'active' : ''}" data-tab="rankings">Rankings</button>
+    </div>
+    <div id="tabContent">
+      ${tab === 'participants' ? renderParticipantsTab(t) : tab === 'format' ? renderFormatTab(t) : tab === 'schedule' ? renderScheduleTab(t) : tab === 'scoring' ? renderScoringTab(t) : renderRankingsTab(t)}
+    </div>
+  `;
+
+  document.getElementById('backBtn').addEventListener('click', () => {
+    view = 'list';
+    render();
+  });
+
+  container.querySelectorAll('.tab[data-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tab = btn.dataset.tab;
+      render();
+    });
+  });
+
+  if (tab === 'participants') {
+    wireParticipantsTab(t);
+  } else if (tab === 'format') {
+    wireFormatTab(t);
+  } else if (tab === 'schedule') {
+    wireScheduleTab(t);
+  } else if (tab === 'scoring') {
+    wireScoringTab(t);
+  } else if (tab === 'rankings') {
+    wireRankingsTab(t);
+  }
+}
+
+/* ─── Participants Tab ─── */
+
+let selectedCategoryTab = 0;
+
+function renderParticipantsTab(t) {
+  // Add Category row at top (small)
+  const addCatRow = `
+    <div class="add-cat-row">
+      <input type="text" id="catInput" placeholder="New category..." maxlength="60">
+      <button class="btn btn-primary btn-small" id="addCatBtn">Add</button>
+    </div>
+  `;
+
+  // Categories as tabs with edit icons
+  const categoryTabs = t.categories.length
+    ? t.categories.map((c, i) => {
+        const color = CATEGORY_COLORS[i % CATEGORY_COLORS.length];
+        const isActive = i === selectedCategoryTab;
+        return `
+          <button class="cat-tab ${isActive ? 'active' : ''}" data-cat-index="${i}" style="${isActive ? `border-color:${color};color:${color}` : ''}">
+            <span>${escapeHtml(c)}</span>
+            <button class="cat-edit" data-cat-index="${i}" aria-label="Edit category">✎</button>
+          </button>
+        `;
+      }).join('')
+    : '<span class="empty-hint">No categories yet. Add one above.</span>';
+
+  // Teams for selected category
+  const currentCat = t.categories[selectedCategoryTab];
+  const teamsInCat = currentCat ? t.teams.filter(team => team.category === currentCat) : [];
+  
+  const teamsHtml = teamsInCat.length
+    ? teamsInCat.map((team, i) => {
+        const originalIndex = t.teams.indexOf(team);
+        return `
+          <div class="team-item-compact">
+            <span class="team-icon-sm">👤</span>
+            <span class="team-name-sm">${escapeHtml(team.name)}</span>
+            <button class="team-edit-sm" data-team-index="${originalIndex}" aria-label="Edit team">✎</button>
+            <button class="team-delete-sm" data-team-index="${originalIndex}" aria-label="Remove team">✕</button>
+          </div>
+        `;
+      }).join('')
+    : '<span class="empty-hint">No teams in this category yet.</span>';
+
+  return `
+    ${addCatRow}
+    <section class="detail-section">
+      <div class="cat-tabs">${categoryTabs}</div>
+    </section>
+    <section class="detail-section">
+      <div class="section-header">
+        <h2>Teams${currentCat ? ` · ${escapeHtml(currentCat)}` : ''}</h2>
+        <button class="btn btn-ghost btn-small" id="openTeamModalBtn">+ Add Teams</button>
+      </div>
+      <div class="team-list-compact">${teamsHtml}</div>
+    </section>
+  `;
+}
+
+function wireParticipantsTab(t) {
+  document.getElementById('addCatBtn').addEventListener('click', () => {
+    const input = document.getElementById('catInput');
+    const name = input.value.trim();
+    if (!name) return;
+    const list = getTournaments();
+    ensureTournamentData(list[selectedIndex]).categories.push(name);
+    saveTournaments(list);
+    input.value = '';
+    render();
+  });
+  document.getElementById('catInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('addCatBtn').click();
+  });
+  
+  // Category tab clicks
+  document.querySelectorAll('.cat-tab').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      if (e.target.classList.contains('cat-edit')) return;
+      selectedCategoryTab = parseInt(btn.dataset.catIndex);
+      render();
+    });
+  });
+  
+  // Category edit buttons
+  document.querySelectorAll('.cat-edit').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const i = parseInt(btn.dataset.catIndex);
+      const list = getTournaments();
+      const t = ensureTournamentData(list[selectedIndex]);
+      const oldName = t.categories[i];
+      
+      if (await customConfirm(`Delete category "${oldName}" and all its teams?`)) {
+        t.categories.splice(i, 1);
+        t.teams = t.teams.filter(team => team.category !== oldName);
+        if (selectedCategoryTab >= t.categories.length) {
+          selectedCategoryTab = Math.max(0, t.categories.length - 1);
+        }
+        saveTournaments(list);
+        render();
+      } else {
+        const newName = await customPrompt('Rename category', oldName);
+        if (newName && newName.trim() && newName.trim() !== oldName) {
+          t.teams.forEach(team => {
+            if (team.category === oldName) team.category = newName.trim();
+          });
+          t.categories[i] = newName.trim();
+          saveTournaments(list);
+          render();
+        }
+      }
+    });
+  });
+  
+  document.getElementById('openTeamModalBtn').addEventListener('click', openTeamModal);
+  document.querySelectorAll('.team-delete-sm').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const i = parseInt(btn.dataset.teamIndex);
+      const list = getTournaments();
+      ensureTournamentData(list[selectedIndex]).teams.splice(i, 1);
+      saveTournaments(list);
+      render();
+    });
+  });
+  document.querySelectorAll('.team-edit-sm').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const i = parseInt(btn.dataset.teamIndex);
+      const list = getTournaments();
+      const t = ensureTournamentData(list[selectedIndex]);
+      const oldName = t.teams[i].name;
+      const newName = await customPrompt('Rename team', oldName);
+      if (newName && newName.trim() && newName.trim() !== oldName) {
+        // Update team name in all matches
+        t.schedule.matches.forEach(m => {
+          if (m.team1 === oldName) m.team1 = newName.trim();
+          if (m.team2 === oldName) m.team2 = newName.trim();
+        });
+        // Update team name in all format phases
+        Object.values(t.formats).forEach(fmt => {
+          if (fmt.phases) {
+            fmt.phases.forEach(phase => {
+              if (phase.groups) {
+                phase.groups.forEach(g => {
+                  g.entries = g.entries.map(e => e === oldName ? newName.trim() : e);
+                });
+              }
+            });
+          }
+        });
+        t.teams[i].name = newName.trim();
+        saveTournaments(list);
+        render();
+      }
+    });
+  });
+}
+
+/* ─── Format Tab ─── */
+
+function renderFormatTab(t) {
+  const catOptions = t.categories.length
+    ? '<option value="">Select a category...</option>' + t.categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('')
+    : '<option value="">No categories yet</option>';
+
+  const body = formatCat && t.categories.includes(formatCat) ? renderFormatBodyForCategory(formatCat) : '';
+
+  return `
+    <section class="detail-section">
+      <div class="format-selector">
+        <label for="formatCatSelect">Category</label>
+        <select id="formatCatSelect">${catOptions}</select>
+      </div>
+      <div id="formatBody">${body || '<span class="empty-hint">Select a category to configure its format.</span>'}</div>
+    </section>
+  `;
+}
+
+function renderFormatBodyForCategory(cat) {
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  if (!t || !cat || !t.categories.includes(cat)) return '';
+
+  const fmt = t.formats[cat];
+  const matchDuration = fmt?.matchDuration || 10;
+
+  if (!fmt || !fmt.phases || !fmt.phases.length) {
+    return `
+      <div class="format-options">
+        <p>Choose tournament format for <strong>${escapeHtml(cat)}</strong></p>
+        <div class="format-duration-setting">
+          <label>Match Duration (minutes)</label>
+          <input type="number" value="${matchDuration}" min="1" max="120" onchange="updateMatchDuration('${escapeHtml(cat)}', this.value)">
+        </div>
+        <button class="btn btn-secondary" data-action="group" onclick="fmtPick(this)">Group Stage</button>
+        <button class="btn btn-secondary" data-action="group-ko" onclick="fmtPick(this)">Group Stage + Knockout</button>
+        <button class="btn btn-secondary" data-action="ko" onclick="fmtPick(this)">Knockout</button>
+      </div>
+    `;
+  }
+
+  // Compute available teams for this category
+  const assignedTeams = new Set();
+  if (fmt && fmt.phases) {
+    fmt.phases.forEach(phase => {
+      if (phase.groups) phase.groups.forEach(g => {
+        g.entries.forEach(e => { if (e) assignedTeams.add(e); });
+      });
+    });
+  }
+  const catTeams = t.teams.filter(team => team.category === cat).map(team => team.name);
+  const catTeamOptions = catTeams
+    .filter(name => !assignedTeams.has(name))
+    .map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`)
+    .join('');
+
+  const phasesHtml = fmt.phases.map((phase, pi) => {
+    let contentHtml = '';
+    
+    if (!phase.type) {
+      // Empty phase - show add buttons
+      contentHtml = `
+        <div class="format-phase-content">
+          <div class="format-phase-actions">
+            <button class="btn btn-secondary btn-small" onclick="fmtAddGroupToPhase(${pi})">+ Add Group</button>
+            <button class="btn btn-secondary btn-small" onclick="fmtAddBracketToPhase(${pi})">+ Add Bracket</button>
+          </div>
+        </div>
+      `;
+    } else if (phase.type === 'group') {
+      // Group phase - show groups
+      const groupsHtml = phase.groups && phase.groups.length
+        ? phase.groups.map((g, gi) => {
+            const slotsHtml = g.entries.map((entry, si) => {
+              if (entry) {
+                const otherAssigned = new Set();
+                g.entries.forEach((e, idx) => {
+                  if (idx !== si && e) otherAssigned.add(e);
+                });
+                const opts = catTeams
+                  .filter(name => !otherAssigned.has(name))
+                  .map(name => `<option value="${escapeHtml(name)}" ${name === entry ? 'selected' : ''}>${escapeHtml(name)}</option>`)
+                  .join('');
+                return `<tr><td class="slot-filled"><select class="slot-select" style="color:var(--text);font-style:normal;font-weight:500" onchange="fmtSlotSelect(event,${pi},${gi},${si})"><option value="">— Select team —</option>${opts}</select></td></tr>`;
+              }
+              const opts = catTeamOptions || '<option value="" disabled>No teams available</option>';
+              return `<tr><td class="slot-empty"><select class="slot-select" onchange="fmtSlotSelect(event,${pi},${gi},${si})"><option value="">— Select team —</option>${opts}</select></td></tr>`;
+            }).join('');
+            return `
+              <div class="group-card">
+                <div class="group-card-header">
+                  <span>${escapeHtml(g.name)}</span>
+                  <button class="btn btn-ghost btn-small" onclick="fmtDeleteGroup(${pi},${gi})" aria-label="Delete group">✕</button>
+                </div>
+                <table class="group-table">${slotsHtml}</table>
+              </div>
+            `;
+          }).join('')
+        : '';
+      
+      contentHtml = `
+        <div class="format-phase-content">
+          <div class="format-phase-groups">${groupsHtml}</div>
+          <div class="format-phase-actions">
+            <button class="btn btn-ghost btn-small" onclick="fmtAddGroupToPhase(${pi})">+ Add Group</button>
+          </div>
+        </div>
+      `;
+    } else if (phase.type === 'knockout') {
+      // Knockout phase
+      contentHtml = `
+        <div class="format-phase-content">
+          <span class="empty-hint">Knockout bracket — coming soon.</span>
+        </div>
+      `;
+    } else if (phase.type === 'bracket') {
+      // Bracket phase
+      const bracketLetter = phase.bracketLetter || 'A';
+      const matchesHtml = phase.matches && phase.matches.length
+        ? phase.matches.map((match, mi) => {
+            const slotsHtml = match.slots.map((slot, si) => {
+              const placeholderOptions = getPlaceholderOptions(cat, slot.placeholder);
+              const selectedValue = slot.placeholder || '';
+              const displayText = slot.placeholder ? slot.placeholder : '— Select placeholder —';
+              return `
+                <tr>
+                  <td class="slot-empty">
+                    <select class="slot-select bracket-slot-select" onchange="bracketSlotSelect(event,${pi},${mi},${si})" style="${slot.placeholder ? 'color:var(--text);font-style:normal;font-weight:500' : ''}">
+                      <option value="">— Select placeholder —</option>
+                      ${placeholderOptions}
+                    </select>
+                  </td>
+                </tr>
+              `;
+            }).join('');
+            
+            return `
+              <div class="bracket-match-card">
+                <div class="bracket-match-label">${escapeHtml(match.label)}</div>
+                <div class="bracket-match-name">${escapeHtml(match.name)}</div>
+                <table class="group-table">${slotsHtml}</table>
+              </div>
+            `;
+          }).join('')
+        : '';
+      
+      contentHtml = `
+        <div class="format-phase-content">
+          <div class="bracket-container">
+            <div class="bracket-title">Bracket ${escapeHtml(bracketLetter)}</div>
+            <div class="bracket-matches">${matchesHtml}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="format-phase-column">
+        <div class="format-phase-header">
+          <span class="format-phase-title">${escapeHtml(phase.name)}</span>
+          <button class="format-phase-delete" onclick="fmtDeletePhase(${pi})" aria-label="Delete phase">✕</button>
+        </div>
+        ${contentHtml}
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="format-duration-setting">
+      <label>Match Duration (minutes)</label>
+      <input type="number" value="${matchDuration}" min="1" max="120" onchange="updateMatchDuration('${escapeHtml(cat)}', this.value)">
+    </div>
+    <div class="format-phases">
+      ${phasesHtml}
+      <div class="format-add-phase-column" onclick="fmtAddPhase()">+ Add Phase</div>
+    </div>
+  `;
+}
+
+function wireFormatTab(t) {
+  const catSelect = document.getElementById('formatCatSelect');
+  if (!catSelect) return;
+  if (formatCat) catSelect.value = formatCat;
+
+  catSelect.addEventListener('change', () => {
+    formatCat = catSelect.value;
+    render();
+  });
+
+  wireFormatBody(formatCat);
+}
+
+function wireFormatBody(cat) {
+  // All interactions use inline onclick — nothing to wire here.
+}
+
+function updateMatchDuration(cat, value) {
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  if (!t.formats[cat]) t.formats[cat] = { phases: [] };
+  t.formats[cat].matchDuration = parseInt(value) || 10;
+  saveTournaments(list);
+}
+
+/* ─── Schedule Tab ─── */
+
+function renderScheduleTab(t) {
+  const schedule = t.schedule;
+  
+  const fieldsHtml = schedule.fields.length ? schedule.fields.map(f => `
+    <div class="field-item">
+      <span class="field-item-name">${escapeHtml(f.name)}</span>
+      <span class="field-item-time">${f.startTime || '--:--'}</span>
+      <div class="field-item-actions">
+        <button onclick="editField('${f.id}')" title="Edit">✎</button>
+        <button onclick="deleteField('${f.id}')" title="Delete">✕</button>
+      </div>
+    </div>
+  `).join('') : '<div class="empty-hint">No playing fields yet</div>';
+
+  const groupsList = getGroupsList(t);
+  const groupsHtml = groupsList.length ? `
+    <label class="checkbox-item checkbox-item-all">
+      <input type="checkbox" id="selectAllGroups" onchange="toggleAllGroups(this)">
+      All Groups/Brackets
+    </label>
+    ${groupsList.map(g => `
+      <label class="checkbox-item">
+        <input type="checkbox" class="group-checkbox" value="${g.value}" onchange="updateSelectAll()">
+        ${escapeHtml(g.label)}
+      </label>
+    `).join('')}
+  ` : '<div class="empty-hint">No groups configured</div>';
+
+  const fieldsOptions = schedule.fields.length ? `
+    <select class="select-field" id="fieldSelect">
+      <option value="">Select field...</option>
+      ${schedule.fields.map(f => `<option value="${f.id}">${escapeHtml(f.name)}</option>`).join('')}
+    </select>
+  ` : '<div class="empty-hint">Add playing fields first</div>';
+
+  const fieldsDisplay = schedule.fields.length ? schedule.fields.map(f => {
+    const fieldMatches = schedule.matches.filter(m => m.fieldId === f.id).sort((a, b) => a.time.localeCompare(b.time));
+    const matchesHtml = fieldMatches.length ? fieldMatches.map(m => {
+      if (m.isBreak) {
+        return `
+          <div class="match-card break-card" data-match-id="${m.id}">
+            <button class="match-card-delete" onclick="deleteMatch('${m.id}')" title="Delete break">✕</button>
+            <div class="match-card-time">${m.time}</div>
+            <div class="match-card-break-label">BREAK</div>
+            <div class="match-card-break-duration">
+              <input type="number" value="${m.duration || 10}" min="1" max="120" onchange="updateBreakDuration('${m.id}', this.value)" title="Duration in minutes">
+              <span>min</span>
+            </div>
+          </div>
+        `;
+      }
+      return `
+        <div class="match-card" draggable="true" data-match-id="${m.id}" ondragstart="dragStart(event)" ondragend="dragEnd(event)">
+          <button class="match-card-delete" onclick="deleteMatch('${m.id}')" title="Delete match">✕</button>
+          <div class="match-card-time">${m.time}</div>
+          <div class="match-card-teams">
+            ${escapeHtml(m.team1)}<span class="vs">vs</span>${escapeHtml(m.team2)}
+          </div>
+          <span class="match-card-pill" style="background:${hexToRgba(getCatColor(t.categories, m.category), 0.15)};color:${getCatColor(t.categories, m.category)}">${escapeHtml(m.category)} · ${escapeHtml(m.group)}</span>
+        </div>
+      `;
+    }).join('') : '<div class="empty-field">No matches. Generate fixtures or drag matches here.</div>';
+    
+    return `
+      <div class="field-card">
+        <div class="field-card-header">
+          <span class="field-card-title">${escapeHtml(f.name)}</span>
+          <span class="field-card-actions">
+            <button class="field-clear-btn" onclick="clearFieldMatches('${f.id}')" title="Clear all matches">Clear</button>
+            <span class="field-card-time">
+              <input type="time" value="${f.startTime || ''}" onchange="updateFieldTime('${f.id}', this.value)">
+            </span>
+          </span>
+        </div>
+        <div class="match-list" data-field-id="${f.id}" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)">
+          ${matchesHtml}
+          <button class="add-break-btn" onclick="addBreak('${f.id}')">+ Add Break</button>
+        </div>
+      </div>
+    `;
+  }).join('') : '<div class="empty-state"><p>Add playing fields to get started</p></div>';
+
+  return `
+    <div class="schedule-layout">
+      <div class="schedule-main">
+        <div class="fields-display">
+          ${fieldsDisplay}
+        </div>
+      </div>
+      <div class="schedule-panel">
+        <div class="schedule-panel-section">
+          <h3>Playing Fields</h3>
+          <div class="field-list">${fieldsHtml}</div>
+          <div class="add-field-row">
+            <input type="text" id="fieldName" placeholder="Field name" class="select-field">
+            <input type="time" id="fieldTime" class="select-field">
+            <button class="btn btn-primary btn-small" onclick="addField()">Add</button>
+          </div>
+        </div>
+        <div class="schedule-panel-section">
+          <button class="btn btn-secondary" onclick="recalculateAllTimes()" style="width:100%;justify-content:center">Recalculate All Times</button>
+        </div>
+        <div class="schedule-panel-section">
+          <h3>Generate Fixtures</h3>
+          <div class="schedule-panel-section">
+            <label style="font-size:13px;color:var(--text-dim);margin-bottom:8px;display:block">1. Select Groups/Brackets</label>
+            <div class="checkbox-group">${groupsHtml}</div>
+          </div>
+          <div class="schedule-panel-section">
+            <label style="font-size:13px;color:var(--text-dim);margin-bottom:8px;display:block">2. Select Field</label>
+            ${fieldsOptions}
+          </div>
+          <button class="btn btn-primary btn-generate" onclick="generateFixtures()">Generate Fixtures</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function wireScheduleTab(t) {
+  // Wire up event handlers if needed
+}
+
+function getGroupsList(t) {
+  const groups = [];
+  Object.keys(t.formats).forEach(cat => {
+    const fmt = t.formats[cat];
+    if (fmt && fmt.phases) {
+      fmt.phases.forEach(phase => {
+        if (phase.type === 'group' && phase.groups) {
+          phase.groups.forEach(g => {
+            groups.push({
+              value: `${cat}|${phase.name}|${g.name}`,
+              label: `${cat} · ${g.name}`
+            });
+          });
+        } else if (phase.type === 'knockout') {
+          groups.push({
+            value: `${cat}|${phase.name}|bracket`,
+            label: `${cat} · Bracket`
+          });
+        } else if (phase.type === 'bracket') {
+          const bracketLetter = phase.bracketLetter || 'A';
+          groups.push({
+            value: `${cat}|${phase.name}|bracket_${bracketLetter}`,
+            label: `${cat} · Bracket ${bracketLetter}`
+          });
+        }
+      });
+    }
+  });
+  return groups;
+}
+
+function addField() {
+  const name = document.getElementById('fieldName').value.trim();
+  const time = document.getElementById('fieldTime').value;
+  if (!name) return;
+  
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  t.schedule.fields.push({
+    id: 'field_' + Date.now(),
+    name,
+    startTime: time || '09:00'
+  });
+  saveTournaments(list);
+  render();
+}
+
+async function editField(id) {
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  const field = t.schedule.fields.find(f => f.id === id);
+  if (!field) return;
+  
+  const name = await customPrompt('Field name', field.name);
+  if (name === null) return;
+  const time = await customPrompt('Start time (HH:MM)', field.startTime);
+  if (time === null) return;
+  
+  field.name = name.trim() || field.name;
+  field.startTime = time || field.startTime;
+  saveTournaments(list);
+  render();
+}
+
+async function deleteField(id) {
+  if (!await customConfirm('Delete this field and all its matches?')) return;
+  
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  t.schedule.fields = t.schedule.fields.filter(f => f.id !== id);
+  t.schedule.matches = t.schedule.matches.filter(m => m.fieldId !== id);
+  saveTournaments(list);
+  render();
+}
+
+function updateFieldTime(id, time) {
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  const field = t.schedule.fields.find(f => f.id === id);
+  if (field) {
+    field.startTime = time;
+    saveTournaments(list);
+  }
+}
+
+async function clearFieldMatches(fieldId) {
+  if (!await customConfirm('Clear all matches from this field?')) return;
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  t.schedule.matches = t.schedule.matches.filter(m => m.fieldId !== fieldId);
+  saveTournaments(list);
+  render();
+}
+
+function deleteMatch(matchId) {
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  t.schedule.matches = t.schedule.matches.filter(m => m.id !== matchId);
+  saveTournaments(list);
+  render();
+}
+
+function addBreak(fieldId) {
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  const field = t.schedule.fields.find(f => f.id === fieldId);
+  if (!field) return;
+  
+  // Find the last match time on this field
+  const fieldMatches = t.schedule.matches.filter(m => m.fieldId === fieldId);
+  let breakTime = field.startTime || '09:00';
+  if (fieldMatches.length > 0) {
+    // Calculate time after the last match/break
+    let lastTime = field.startTime || '09:00';
+    fieldMatches.forEach(m => {
+      if (m.isBreak) {
+        const endTime = addMinutes(m.time, m.duration || 10);
+        if (endTime > lastTime) lastTime = endTime;
+      } else {
+        // Get category match duration
+        const fmt = t.formats[m.category];
+        const duration = fmt?.matchDuration || 10;
+        const endTime = addMinutes(m.time, duration);
+        if (endTime > lastTime) lastTime = endTime;
+      }
+    });
+    breakTime = lastTime;
+  }
+  
+  t.schedule.matches.push({
+    id: 'break_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+    fieldId,
+    time: breakTime,
+    isBreak: true,
+    duration: 10
+  });
+  saveTournaments(list);
+  render();
+}
+
+function updateBreakDuration(matchId, value) {
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  const match = t.schedule.matches.find(m => m.id === matchId);
+  if (match && match.isBreak) {
+    match.duration = parseInt(value) || 10;
+    
+    // Recalculate ALL times on this field from the start
+    const field = t.schedule.fields.find(f => f.id === match.fieldId);
+    if (!field) return;
+    
+    const fieldMatches = t.schedule.matches
+      .filter(m => m.fieldId === match.fieldId)
+      .sort((a, b) => a.time.localeCompare(b.time));
+    
+    let currentTime = field.startTime || '09:00';
+    
+    fieldMatches.forEach(m => {
+      m.time = currentTime;
+      
+      if (m.isBreak) {
+        currentTime = addMinutes(currentTime, m.duration || 10);
+      } else {
+        const fmt = t.formats[m.category];
+        const duration = fmt?.matchDuration || 10;
+        currentTime = addMinutes(currentTime, duration);
+      }
+    });
+    
+    saveTournaments(list);
+    render();
+  }
+}
+
+function recalculateAllTimes() {
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  
+  t.schedule.fields.forEach(field => {
+    const fieldMatches = t.schedule.matches
+      .filter(m => m.fieldId === field.id)
+      .sort((a, b) => a.time.localeCompare(b.time));
+    
+    let currentTime = field.startTime || '09:00';
+    
+    fieldMatches.forEach(m => {
+      m.time = currentTime;
+      
+      if (m.isBreak) {
+        currentTime = addMinutes(currentTime, m.duration || 10);
+      } else {
+        const fmt = t.formats[m.category];
+        const duration = fmt?.matchDuration || 10;
+        currentTime = addMinutes(currentTime, duration);
+      }
+    });
+  });
+  
+  saveTournaments(list);
+  render();
+}
+
+function toggleAllGroups(checkbox) {
+  document.querySelectorAll('.group-checkbox').forEach(cb => {
+    cb.checked = checkbox.checked;
+  });
+}
+
+function updateSelectAll() {
+  const all = document.querySelectorAll('.group-checkbox');
+  const checked = document.querySelectorAll('.group-checkbox:checked');
+  document.getElementById('selectAllGroups').checked = all.length === checked.length;
+}
+
+function generateFixtures() {
+  const selectedGroups = Array.from(document.querySelectorAll('.group-checkbox:checked')).map(cb => cb.value);
+  const fieldId = document.getElementById('fieldSelect')?.value;
+  
+  if (!selectedGroups.length) {
+    alert('Please select at least one group/bracket');
+    return;
+  }
+  if (!fieldId) {
+    alert('Please select a playing field');
+    return;
+  }
+  
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  const field = t.schedule.fields.find(f => f.id === fieldId);
+  if (!field) return;
+  
+  const newMatches = [];
+  
+  // Find the last match/break time on this field
+  const fieldMatches = t.schedule.matches.filter(m => m.fieldId === fieldId);
+  let matchTime = field.startTime || '09:00';
+  if (fieldMatches.length > 0) {
+    // Calculate time after the last match/break
+    let lastTime = field.startTime || '09:00';
+    fieldMatches.forEach(m => {
+      if (m.isBreak) {
+        const endTime = addMinutes(m.time, m.duration || 10);
+        if (endTime > lastTime) lastTime = endTime;
+      } else {
+        // Get category match duration
+        const fmt = t.formats[m.category];
+        const duration = fmt?.matchDuration || 10;
+        const endTime = addMinutes(m.time, duration);
+        if (endTime > lastTime) lastTime = endTime;
+      }
+    });
+    matchTime = lastTime;
+  }
+  
+  selectedGroups.forEach(groupKey => {
+    const parts = groupKey.split('|');
+    const cat = parts[0];
+    const phaseName = parts[1];
+    const groupKeyPart = parts[2];
+    
+    const fmt = t.formats[cat];
+    if (!fmt || !fmt.phases) return;
+    
+    const matchDuration = fmt.matchDuration || 10;
+    const phase = fmt.phases.find(p => p.name === phaseName);
+    if (!phase) return;
+    
+    if (phase.type === 'group') {
+      const group = phase.groups.find(g => g.name === groupKeyPart);
+      if (!group) return;
+      
+      const teams = group.entries.filter(e => e);
+      if (teams.length < 2) return;
+      
+      // Generate round-robin schedule with no consecutive matches per team
+      const scheduledMatches = generateRoundRobinSchedule(teams);
+      
+      scheduledMatches.forEach(match => {
+        newMatches.push({
+          id: 'match_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+          fieldId,
+          time: matchTime,
+          team1: match.team1,
+          team2: match.team2,
+          category: cat,
+          group: groupKeyPart
+        });
+        matchTime = addMinutes(matchTime, matchDuration);
+      });
+    } else if (phase.type === 'bracket') {
+      // Generate bracket matches
+      if (!phase.matches) return;
+      
+      phase.matches.forEach(match => {
+        // For now, use placeholder text as team names
+        // Later this will resolve to actual teams based on standings
+        const team1 = match.slots[0]?.placeholder || 'TBD';
+        const team2 = match.slots[1]?.placeholder || 'TBD';
+        
+        newMatches.push({
+          id: match.id,
+          fieldId,
+          time: matchTime,
+          team1: team1,
+          team2: team2,
+          category: cat,
+          group: match.name,
+          isBracketMatch: true,
+          bracketLabel: match.label
+        });
+        matchTime = addMinutes(matchTime, matchDuration);
+      });
+    }
+  });
+  
+  t.schedule.matches.push(...newMatches);
+  saveTournaments(list);
+  render();
+}
+
+function generateRoundRobinSchedule(teams) {
+  const n = teams.length;
+  if (n < 2) return [];
+  
+  // Generate all possible matches
+  const allMatches = [];
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      allMatches.push({ team1: teams[i], team2: teams[j] });
+    }
+  }
+  
+  // Greedy ordering: pick matches that don't involve teams that just played
+  const scheduled = [];
+  const remaining = [...allMatches];
+  let lastTeams = new Set();
+  
+  while (remaining.length > 0) {
+    // Find a match where neither team played in the last match
+    let bestMatchIndex = -1;
+    for (let i = 0; i < remaining.length; i++) {
+      const match = remaining[i];
+      if (!lastTeams.has(match.team1) && !lastTeams.has(match.team2)) {
+        bestMatchIndex = i;
+        break;
+      }
+    }
+    
+    // If no such match, just pick the first available
+    if (bestMatchIndex === -1) {
+      bestMatchIndex = 0;
+    }
+    
+    const match = remaining.splice(bestMatchIndex, 1)[0];
+    scheduled.push(match);
+    lastTeams = new Set([match.team1, match.team2]);
+  }
+  
+  return scheduled;
+}
+
+function addMinutes(time, minutes) {
+  const [h, m] = time.split(':').map(Number);
+  const totalMinutes = h * 60 + m + minutes;
+  const newH = Math.floor(totalMinutes / 60) % 24;
+  const newM = totalMinutes % 60;
+  return `${String(newH).padStart(2, '0')}:${String(newM).padStart(2, '0')}`;
+}
+
+let draggedMatchId = null;
+let draggedFromFieldId = null;
+
+function dragStart(e) {
+  draggedMatchId = e.target.dataset.matchId;
+  draggedFromFieldId = e.target.closest('.match-list').dataset.fieldId;
+  e.target.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function dragEnd(e) {
+  e.target.classList.remove('dragging');
+  document.querySelectorAll('.match-list').forEach(ml => ml.classList.remove('drag-over'));
+  draggedMatchId = null;
+  draggedFromFieldId = null;
+}
+
+function dragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+  
+  // Find the card we're hovering over for sorting
+  const afterElement = getDragAfterElement(e.currentTarget, e.clientY);
+  const draggable = document.querySelector('.dragging');
+  if (draggable) {
+    if (afterElement == null) {
+      e.currentTarget.appendChild(draggable);
+    } else {
+      e.currentTarget.insertBefore(draggable, afterElement);
+    }
+  }
+}
+
+function getDragAfterElement(container, y) {
+  const draggableElements = [...container.querySelectorAll('.match-card:not(.dragging)')];
+  
+  return draggableElements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+    if (offset < 0 && offset > closest.offset) {
+      return { offset: offset, element: child };
+    } else {
+      return closest;
+    }
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+function dragLeave(e) {
+  // Only remove if we're actually leaving the container
+  if (!e.currentTarget.contains(e.relatedTarget)) {
+    e.currentTarget.classList.remove('drag-over');
+  }
+}
+
+function drop(e) {
+  e.preventDefault();
+  const targetFieldId = e.currentTarget.dataset.fieldId;
+  e.currentTarget.classList.remove('drag-over');
+  
+  if (!draggedMatchId) return;
+  
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  
+  // Get the new order from DOM
+  const matchCards = e.currentTarget.querySelectorAll('.match-card');
+  const newOrder = Array.from(matchCards).map(card => card.dataset.matchId);
+  
+  // Update match field and recalculate times
+  const field = t.schedule.fields.find(f => f.id === targetFieldId);
+  if (!field) return;
+  
+  // Get all matches for this field
+  const fieldMatches = t.schedule.matches.filter(m => m.fieldId === targetFieldId);
+  
+  // Sort matches according to new order
+  fieldMatches.sort((a, b) => {
+    const aIdx = newOrder.indexOf(a.id);
+    const bIdx = newOrder.indexOf(b.id);
+    if (aIdx === -1) return 1;
+    if (bIdx === -1) return -1;
+    return aIdx - bIdx;
+  });
+  
+  // Update times sequentially
+  let currentTime = field.startTime || '09:00';
+  fieldMatches.forEach(m => {
+    m.time = currentTime;
+    m.fieldId = targetFieldId;
+    currentTime = addMinutes(currentTime, 10);
+  });
+  
+  // If moved from another field, update that match's fieldId
+  if (draggedFromFieldId && draggedFromFieldId !== targetFieldId) {
+    const match = t.schedule.matches.find(m => m.id === draggedMatchId);
+    if (match) {
+      match.fieldId = targetFieldId;
+    }
+  }
+  
+  saveTournaments(list);
+  render();
+}
+
+/* ─── Scoring Tab ─── */
+
+function renderScoringTab(t) {
+  const schedule = t.schedule;
+  
+  if (!schedule.fields.length || !schedule.matches.length) {
+    return '<div class="scoring-empty">No matches scheduled yet. Go to Schedule tab to generate fixtures.</div>';
+  }
+
+  const fieldColors = ['#D4A853', '#9B5DE5', '#2A9D8F', '#E76F51', '#F15BB5', '#00BBF9', '#06D6A0', '#FB8500'];
+
+  const allMatches = schedule.matches
+    .map(m => {
+      const fieldIndex = schedule.fields.findIndex(f => f.id === m.fieldId);
+      const field = schedule.fields[fieldIndex];
+      return { ...m, fieldName: field ? field.name : 'Unknown', fieldColor: fieldColors[fieldIndex % fieldColors.length] };
+    })
+    .sort((a, b) => a.time.localeCompare(b.time));
+
+  const cardsHtml = allMatches.map(m => {
+    if (m.isBreak) {
+      return `
+        <div class="scoring-match-card scoring-break-card">
+          <div class="scoring-card-header">
+            <span class="scoring-card-field" style="color:${m.fieldColor}">${escapeHtml(m.fieldName)}</span>
+            <span class="scoring-card-time">${m.time}</span>
+          </div>
+          <div class="scoring-break-label">BREAK</div>
+          <div class="scoring-break-duration">
+            <input type="number" min="1" max="120" value="${m.duration || 10}" onchange="updateBreakDuration('${m.id}', this.value)">
+            <span>min</span>
+          </div>
+        </div>
+      `;
+    }
+    
+    const isOngoing = m.status === 'ongoing';
+    const isCompleted = m.status === 'completed';
+    const score1 = m.score1 ?? '';
+    const score2 = m.score2 ?? '';
+    const catColor = getCatColor(t.categories, m.category);
+    
+    let btnClass = 'btn-ongoing';
+    let btnText = 'Start';
+    if (isOngoing) {
+      btnClass += ' is-ongoing';
+      btnText = 'Ongoing';
+    } else if (isCompleted) {
+      btnClass += ' is-completed';
+      btnText = 'Done';
+    }
+    
+    const controlsVisible = isOngoing ? 'visible' : '';
+    
+    // Determine winner for highlighting
+    const team1Winner = isCompleted && m.score1 > m.score2 ? 'scoring-team-winner' : '';
+    const team2Winner = isCompleted && m.score2 > m.score1 ? 'scoring-team-winner' : '';
+    
+    return `
+      <div class="scoring-match-card ${isOngoing ? 'scoring-card-ongoing' : ''}">
+        <div class="scoring-card-header">
+          <span class="scoring-card-field" style="color:${m.fieldColor}">${escapeHtml(m.fieldName)}</span>
+          <span class="scoring-card-time">${m.time}</span>
+        </div>
+        <div class="scoring-card-teams">
+          <div class="scoring-team ${team1Winner}">
+            <div class="scoring-team-info">
+              <span class="scoring-team-name">${escapeHtml(m.team1)}</span>
+            </div>
+            <div class="scoring-team-score">
+              <input type="number" class="scoring-score-input" min="0" value="${score1}" data-match-id="${m.id}" data-score="1" ${isCompleted ? 'disabled' : ''}>
+              <div class="scoring-score-controls ${controlsVisible}">
+                <button class="scoring-score-btn scoring-score-btn-plus" onclick="adjustScore('${m.id}', '1', 1)">+</button>
+                <button class="scoring-score-btn scoring-score-btn-minus" onclick="adjustScore('${m.id}', '1', -1)">−</button>
+              </div>
+            </div>
+          </div>
+          <div class="scoring-team ${team2Winner}">
+            <div class="scoring-team-info">
+              <span class="scoring-team-name">${escapeHtml(m.team2)}</span>
+            </div>
+            <div class="scoring-team-score">
+              <input type="number" class="scoring-score-input" min="0" value="${score2}" data-match-id="${m.id}" data-score="2" ${isCompleted ? 'disabled' : ''}>
+              <div class="scoring-score-controls ${controlsVisible}">
+                <button class="scoring-score-btn scoring-score-btn-plus" onclick="adjustScore('${m.id}', '2', 1)">+</button>
+                <button class="scoring-score-btn scoring-score-btn-minus" onclick="adjustScore('${m.id}', '2', -1)">−</button>
+              </div>
+            </div>
+          </div>
+          <span class="scoring-team-chip" style="background:${hexToRgba(catColor, 0.15)};color:${catColor}">${escapeHtml(m.category)} · ${escapeHtml(m.group)}</span>
+        </div>
+        <div class="scoring-card-footer">
+          <div class="scoring-card-footer-left">
+            <button class="${btnClass}" onclick="toggleMatchStatus('${m.id}')">${btnText}</button>
+            <button class="btn-reset" onclick="resetMatch('${m.id}')">Reset</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  return `<div class="scoring-grid">${cardsHtml}</div>`;
+}
+
+function toggleMatchStatus(matchId) {
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  const match = t.schedule.matches.find(m => m.id === matchId);
+  
+  if (match) {
+    if (!match.status || match.status === 'completed') {
+      // Start the match
+      match.status = 'ongoing';
+      match.score1 = match.score1 ?? 0;
+      match.score2 = match.score2 ?? 0;
+    } else if (match.status === 'ongoing') {
+      // Complete the match
+      match.status = 'completed';
+    }
+    saveTournaments(list);
+    render();
+  }
+}
+
+function adjustScore(matchId, scoreTeam, delta) {
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  const match = t.schedule.matches.find(m => m.id === matchId);
+  
+  if (match && match.status === 'ongoing') {
+    const currentScore = scoreTeam === '1' ? (match.score1 || 0) : (match.score2 || 0);
+    const newScore = Math.max(0, currentScore + delta);
+    
+    if (scoreTeam === '1') {
+      match.score1 = newScore;
+    } else {
+      match.score2 = newScore;
+    }
+    
+    saveTournaments(list);
+    render();
+  }
+}
+
+function resetMatch(matchId) {
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  const match = t.schedule.matches.find(m => m.id === matchId);
+  
+  if (match) {
+    match.status = null;
+    match.score1 = null;
+    match.score2 = null;
+    saveTournaments(list);
+    render();
+  }
+}
+
+function wireScoringTab(t) {
+  // Wire score inputs
+  document.querySelectorAll('.scoring-score-input').forEach(input => {
+    input.addEventListener('change', (e) => {
+      const matchId = e.target.dataset.matchId;
+      const scoreField = e.target.dataset.score;
+      const value = parseInt(e.target.value) || 0;
+      
+      const list = getTournaments();
+      const tournament = ensureTournamentData(list[selectedIndex]);
+      const match = tournament.schedule.matches.find(m => m.id === matchId);
+      
+      if (match) {
+        if (scoreField === '1') {
+          match.score1 = value;
+        } else {
+          match.score2 = value;
+        }
+        saveTournaments(list);
+      }
+    });
+  });
+}
+
+/* ─── Rankings Tab ─── */
+
+function renderRankingsTab(t) {
+  const schedule = t.schedule;
+  
+  if (!schedule.matches.length) {
+    return '<div class="scoring-empty">No matches yet. Generate fixtures first.</div>';
+  }
+  
+  // Get completed matches grouped by category
+  const completedMatches = schedule.matches.filter(m => m.status === 'completed' && !m.isBreak);
+  
+  if (!completedMatches.length) {
+    return '<div class="scoring-empty">No completed matches yet. Score some matches first.</div>';
+  }
+  
+  // Group by category
+  const categories = {};
+  completedMatches.forEach(m => {
+    if (!categories[m.category]) categories[m.category] = [];
+    categories[m.category].push(m);
+  });
+  
+  const categoryColors = ['#D4A853', '#9B5DE5', '#2A9D8F', '#E76F51', '#F15BB5', '#00BBF9', '#06D6A0', '#FB8500'];
+  
+  const tablesHtml = Object.keys(categories).map((cat, catIndex) => {
+    const matches = categories[cat];
+    const color = categoryColors[catIndex % categoryColors.length];
+    
+    // Calculate standings
+    const standings = {};
+    
+    matches.forEach(m => {
+      if (!standings[m.team1]) standings[m.team1] = { played: 0, wins: 0, losses: 0, points: 0, gamesWon: 0, gamesLost: 0 };
+      if (!standings[m.team2]) standings[m.team2] = { played: 0, wins: 0, losses: 0, points: 0, gamesWon: 0, gamesLost: 0 };
+      
+      const s1 = m.score1 || 0;
+      const s2 = m.score2 || 0;
+      
+      standings[m.team1].played++;
+      standings[m.team2].played++;
+      standings[m.team1].gamesWon += s1;
+      standings[m.team1].gamesLost += s2;
+      standings[m.team2].gamesWon += s2;
+      standings[m.team2].gamesLost += s1;
+      
+      if (s1 > s2) {
+        standings[m.team1].wins++;
+        standings[m.team1].points += 2;
+        standings[m.team2].losses++;
+        standings[m.team2].points += 1;
+      } else {
+        standings[m.team2].wins++;
+        standings[m.team2].points += 2;
+        standings[m.team1].losses++;
+        standings[m.team1].points += 1;
+      }
+    });
+    
+    // Sort by points, then games won
+    const sorted = Object.entries(standings).sort((a, b) => {
+      if (b[1].points !== a[1].points) return b[1].points - a[1].points;
+      return b[1].gamesWon - a[1].gamesWon;
+    });
+    
+    const rowsHtml = sorted.map(([team, stats], i) => `
+      <tr>
+        <td class="rank-cell">${i + 1}</td>
+        <td class="team-cell">${escapeHtml(team)}</td>
+        <td>${stats.played}</td>
+        <td class="wins-cell">${stats.wins}</td>
+        <td>${stats.losses}</td>
+        <td>${stats.gamesWon}-${stats.gamesLost}</td>
+        <td class="points-cell">${stats.points}</td>
+      </tr>
+    `).join('');
+    
+    return `
+      <div class="ranking-section">
+        <div class="ranking-section-header" style="color: ${color}">${escapeHtml(cat)}</div>
+        <table class="ranking-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Team</th>
+              <th>P</th>
+              <th>W</th>
+              <th>L</th>
+              <th>Games</th>
+              <th>Pts</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </div>
+    `;
+  }).join('');
+  
+  return `<div class="rankings-container">${tablesHtml}</div>`;
+}
+
+function wireRankingsTab(t) {
+  // No interactivity needed for now
+}
+
+/* ─── Format Setup Modal ─── */
+
+let formatTargetCategory = '';
+let formatTargetType = '';
+
+function openFormatModal(category, type) {
+  formatTargetCategory = category;
+  formatTargetType = type;
+  const isKo = type === 'ko';
+  document.getElementById('formatModalTitle').textContent = isKo ? 'Knockout Setup' : 'Group Stage Setup';
+  document.querySelector('#formatModal .modal p').textContent = isKo ? 'Configure the knockout bracket.' : 'Configure the group stage.';
+  document.getElementById('groupCount').value = isKo ? 1 : 2;
+  document.getElementById('groupCount').style.display = isKo ? 'none' : '';
+  document.querySelector('#formatForm .form-group:first-child label').textContent = isKo ? '' : 'Number of Groups';
+  document.getElementById('teamsPerGroup').value = isKo ? 16 : 5;
+  document.getElementById('formatModal').classList.add('active');
+  setTimeout(() => document.getElementById('groupCount').focus(), 100);
+}
+
+function closeFormatModal() {
+  document.getElementById('formatModal').classList.remove('active');
+}
+
+function createPhasesForCategory(category, type, groupCount, teamsPerGroup) {
+  const phases = [];
+  if (type === 'group' || type === 'group-ko') {
+    const groups = [];
+    for (let i = 0; i < groupCount; i++) {
+      const letter = String.fromCharCode(65 + i);
+      groups.push({ name: `Group ${letter}`, entries: Array(teamsPerGroup).fill(null) });
+    }
+    phases.push({ name: 'Group Stage', type: 'group', groups });
+  }
+  if (type === 'group-ko' || type === 'ko') {
+    phases.push({ name: 'Knockout', type: 'knockout', groups: [] });
+  }
+  return phases;
+}
+
+document.getElementById('formatForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const groupCount = parseInt(document.getElementById('groupCount').value) || 2;
+  const teamsPerGroup = parseInt(document.getElementById('teamsPerGroup').value) || 5;
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  if (!t.formats[formatTargetCategory]) t.formats[formatTargetCategory] = { phases: [] };
+  t.formats[formatTargetCategory].phases = createPhasesForCategory(formatTargetCategory, formatTargetType, groupCount, teamsPerGroup);
+  saveTournaments(list);
+  closeFormatModal();
+  render();
+});
+
+document.getElementById('formatCancelBtn').addEventListener('click', closeFormatModal);
+document.getElementById('formatModal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeFormatModal();
+});
+
+/* ─── Team Picker Modal ─── */
+
+function openPicker(category, callback) {
+  pickerCallback = callback;
+  const t = getTournaments()[selectedIndex];
+  if (!t) return;
+  const teams = t.teams.filter(team => team.category === category).map(team => team.name);
+  const usedTeams = new Set();
+  const fmt = t.formats && t.formats[category];
+  if (fmt && fmt.phases) {
+    fmt.phases.forEach(phase => {
+      if (phase.groups) phase.groups.forEach(g => {
+        g.entries.forEach(e => { if (e) usedTeams.add(e); });
+      });
+    });
+  }
+  document.getElementById('pickerTitle').textContent = `Select Team — ${escapeHtml(category)}`;
+  document.getElementById('pickerSubtitle').textContent = 'Click a team to assign it to this slot.';
+  const list = document.getElementById('pickerList');
+  if (!teams.length) {
+    list.innerHTML = '<div class="picker-empty">No teams in this category yet.<br>Add teams in the Participants tab first.</div>';
+  } else {
+    list.innerHTML = teams.map(name => `
+      <button class="picker-item ${usedTeams.has(name) ? 'picker-disabled' : ''}" data-team="${escapeHtml(name)}">
+        ${escapeHtml(name)} ${usedTeams.has(name) ? '<span style="color:var(--text-dim);font-size:12px">(already assigned)</span>' : ''}
+      </button>
+    `).join('');
+    list.querySelectorAll('.picker-item:not(.picker-disabled)').forEach(btn => {
+      btn.addEventListener('click', () => {
+        pickerCallback(btn.dataset.team);
+        closePicker();
+      });
+    });
+  }
+  document.getElementById('pickerModal').classList.add('active');
+}
+
+function closePicker() {
+  document.getElementById('pickerModal').classList.remove('active');
+  pickerCallback = null;
+}
+
+document.getElementById('pickerCancelBtn').addEventListener('click', closePicker);
+document.getElementById('pickerModal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closePicker();
+});
+
+/* ─── Format Inline Handlers ─── */
+
+function fmtPick(btn) {
+  const action = btn.dataset.action;
+  const cat = formatCat;
+  if (action === 'ko') {
+    const l = getTournaments();
+    const tr = ensureTournamentData(l[selectedIndex]);
+    if (!tr.formats[cat]) tr.formats[cat] = { phases: [] };
+    tr.formats[cat].phases.push({ name: 'Knockout', type: 'knockout', groups: [] });
+    saveTournaments(l);
+    render();
+  } else {
+    openFormatModal(cat, action);
+  }
+}
+
+function fmtSlotSelect(event, pi, gi, si) {
+  const select = event.target;
+  const teamName = select.value;
+  const cat = formatCat;
+  const l = getTournaments();
+  const tr = ensureTournamentData(l[selectedIndex]);
+  const phase = tr.formats[cat].phases[pi];
+  if (!phase || !phase.groups || !phase.groups[gi]) return;
+  
+  const oldTeam = phase.groups[gi].entries[si];
+  
+  // Handle unselect
+  if (!teamName) {
+    phase.groups[gi].entries[si] = null;
+    saveTournaments(l);
+    
+    // Update this slot to empty state
+    const td = select.closest('td');
+    td.className = 'slot-empty';
+    select.style.color = '';
+    select.style.fontStyle = '';
+    select.style.fontWeight = '';
+    
+    // Add the old team back to other dropdowns
+    document.querySelectorAll('.slot-select').forEach(s => {
+      if (s === select) return;
+      if (oldTeam) {
+        const opt = document.createElement('option');
+        opt.value = oldTeam;
+        opt.textContent = oldTeam;
+        s.appendChild(opt);
+      }
+    });
+    return;
+  }
+  
+  phase.groups[gi].entries[si] = teamName;
+  saveTournaments(l);
+
+  const td = select.closest('td');
+  td.className = 'slot-filled';
+  select.style.color = 'var(--text)';
+  select.style.fontStyle = 'normal';
+  select.style.fontWeight = '500';
+
+  document.querySelectorAll('.slot-select').forEach(s => {
+    if (s === select) return;
+    if (oldTeam) {
+      const opt = document.createElement('option');
+      opt.value = oldTeam;
+      opt.textContent = oldTeam;
+      s.appendChild(opt);
+    }
+    Array.from(s.options).forEach(opt => {
+      if (opt.value === teamName) opt.remove();
+    });
+    if (s.options.length <= 1) {
+      s.innerHTML = '<option value="" disabled>No teams available</option>';
+    }
+  });
+}
+
+function fmtDeletePhase(pi) {
+  const cat = formatCat;
+  const l = getTournaments();
+  const tr = ensureTournamentData(l[selectedIndex]);
+  if (tr.formats[cat] && tr.formats[cat].phases[pi]) {
+    tr.formats[cat].phases.splice(pi, 1);
+    if (!tr.formats[cat].phases.length) delete tr.formats[cat];
+    saveTournaments(l);
+    render();
+  }
+}
+
+function fmtDeleteGroup(pi, gi) {
+  const cat = formatCat;
+  const l = getTournaments();
+  const tr = ensureTournamentData(l[selectedIndex]);
+  const phase = tr.formats[cat].phases[pi];
+  if (phase && phase.groups && phase.groups[gi]) {
+    phase.groups.splice(gi, 1);
+    if (!phase.groups.length) {
+      tr.formats[cat].phases.splice(pi, 1);
+      if (!tr.formats[cat].phases.length) delete tr.formats[cat];
+    }
+    saveTournaments(l);
+    render();
+  }
+}
+
+async function fmtAddPhase() {
+  const cat = formatCat;
+  const l = getTournaments();
+  const tr = ensureTournamentData(l[selectedIndex]);
+  if (!tr.formats[cat]) tr.formats[cat] = { phases: [] };
+  const fmt = tr.formats[cat];
+  const name = await customPrompt('Phase name', `Phase ${fmt.phases.length + 1}`);
+  if (!name) return;
+  fmt.phases.push({ name, type: '', groups: [] });
+  saveTournaments(l);
+  render();
+}
+
+async function fmtAddGroupToPhase(pi) {
+  const cat = formatCat;
+  const l = getTournaments();
+  const tr = ensureTournamentData(l[selectedIndex]);
+  const phase = tr.formats[cat].phases[pi];
+  if (!phase) return;
+  
+  const slotsInput = await customPrompt('How many teams in this group?', '5');
+  const slots = parseInt(slotsInput) || 5;
+  const groupLetter = String.fromCharCode(65 + (phase.groups ? phase.groups.length : 0));
+  
+  phase.type = 'group';
+  if (!phase.groups) phase.groups = [];
+  phase.groups.push({ name: `Group ${groupLetter}`, entries: Array(slots).fill(null) });
+  
+  saveTournaments(l);
+  render();
+}
+
+async function fmtAddBracketToPhase(pi) {
+  const cat = formatCat;
+  const l = getTournaments();
+  const tr = ensureTournamentData(l[selectedIndex]);
+  const phase = tr.formats[cat].phases[pi];
+  if (!phase) return;
+  
+  const teamsInput = await customPrompt('Number of teams in bracket', '2');
+  const teamsCount = parseInt(teamsInput);
+  if (teamsCount !== 2 && teamsCount !== 4) return;
+  
+  phase.type = 'bracket';
+  phase.bracketTeams = teamsCount;
+  
+  // Find the bracket letter (next after last group phase)
+  let bracketLetter = 'A';
+  const fmt = tr.formats[cat];
+  if (fmt && fmt.phases) {
+    let groupCount = 0;
+    fmt.phases.forEach(p => {
+      if (p.type === 'group' && p.groups) {
+        groupCount += p.groups.length;
+      }
+    });
+    bracketLetter = String.fromCharCode(65 + groupCount);
+  }
+  
+  phase.bracketLetter = bracketLetter;
+  phase.matches = [];
+  
+  // Create matches based on teams count
+  if (teamsCount === 2) {
+    // 1 match (Final)
+    phase.matches.push({
+      id: `match_${Date.now()}_1`,
+      name: `Match ${bracketLetter}1`,
+      label: 'Final',
+      slots: [
+        { placeholder: null },
+        { placeholder: null }
+      ]
+    });
+  } else if (teamsCount === 4) {
+    // 2 semifinals + 1 final
+    phase.matches.push({
+      id: `match_${Date.now()}_1`,
+      name: `Match ${bracketLetter}1`,
+      label: 'Semifinal 1',
+      slots: [
+        { placeholder: null },
+        { placeholder: null }
+      ]
+    });
+    phase.matches.push({
+      id: `match_${Date.now()}_2`,
+      name: `Match ${bracketLetter}2`,
+      label: 'Semifinal 2',
+      slots: [
+        { placeholder: null },
+        { placeholder: null }
+      ]
+    });
+    phase.matches.push({
+      id: `match_${Date.now()}_3`,
+      name: `Match ${bracketLetter}3`,
+      label: 'Final',
+      slots: [
+        { placeholder: null },
+        { placeholder: null }
+      ]
+    });
+  }
+  
+  saveTournaments(l);
+  render();
+}
+
+function getPlaceholderOptions(cat, selectedPlaceholder) {
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  const fmt = t.formats[cat];
+  if (!fmt || !fmt.phases) return '';
+  
+  const placeholders = [];
+  
+  // Collect all groups from group phases
+  fmt.phases.forEach(phase => {
+    if (phase.type === 'group' && phase.groups) {
+      phase.groups.forEach(group => {
+        const groupName = group.name; // e.g., "Group A"
+        const teamCount = group.entries.length;
+        for (let i = 1; i <= teamCount; i++) {
+          const ordinal = i === 1 ? '1st' : i === 2 ? '2nd' : i === 3 ? '3rd' : `${i}th`;
+          const placeholder = `${ordinal} of ${groupName}`;
+          placeholders.push(placeholder);
+        }
+      });
+    }
+  });
+  
+  return placeholders.map(p => 
+    `<option value="${escapeHtml(p)}" ${p === selectedPlaceholder ? 'selected' : ''}>${escapeHtml(p)}</option>`
+  ).join('');
+}
+
+function bracketSlotSelect(event, pi, mi, si) {
+  const select = event.target;
+  const placeholder = select.value;
+  const cat = formatCat;
+  const l = getTournaments();
+  const tr = ensureTournamentData(l[selectedIndex]);
+  const phase = tr.formats[cat].phases[pi];
+  if (!phase || !phase.matches || !phase.matches[mi]) return;
+  
+  phase.matches[mi].slots[si].placeholder = placeholder || null;
+  saveTournaments(l);
+  
+  // Update styling
+  const td = select.closest('td');
+  if (placeholder) {
+    td.className = 'slot-filled';
+    select.style.color = 'var(--text)';
+    select.style.fontStyle = 'normal';
+    select.style.fontWeight = '500';
+  } else {
+    td.className = 'slot-empty';
+    select.style.color = '';
+    select.style.fontStyle = '';
+    select.style.fontWeight = '';
+  }
+}
+
+/* ─── Tournament Modal ─── */
+
+function openModal() {
+  document.getElementById('modal').classList.add('active');
+  document.getElementById('name').value = '';
+  document.getElementById('venue').value = '';
+  setTimeout(() => document.getElementById('name').focus(), 100);
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+}
+
+document.getElementById('tournamentForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  if (!name) return;
+  const venue = document.getElementById('venue').value.trim();
+  const tournaments = getTournaments();
+  tournaments.push({ name, venue, createdAt: Date.now(), categories: [], teams: [] });
+  saveTournaments(tournaments);
+  closeModal();
+  render();
+});
+
+document.getElementById('cancelBtn').addEventListener('click', closeModal);
+
+document.getElementById('modal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+/* ─── Team Modal ─── */
+
+function openTeamModal() {
+  const t = getTournaments()[selectedIndex];
+  if (!t) return;
+  const select = document.getElementById('teamCategory');
+  if (t.categories.length) {
+    select.innerHTML = t.categories.map((c, i) => 
+      `<option value="${escapeHtml(c)}" ${i === selectedCategoryTab ? 'selected' : ''}>${escapeHtml(c)}</option>`
+    ).join('');
+  } else {
+    select.innerHTML = '<option value="">Uncategorized</option>';
+  }
+  document.getElementById('teamName').value = '';
+  document.getElementById('teamBulk').value = '';
+  document.getElementById('teamModal').classList.add('active');
+  setTimeout(() => document.getElementById('teamName').focus(), 100);
+}
+
+function closeTeamModal() {
+  document.getElementById('teamModal').classList.remove('active');
+}
+
+document.getElementById('teamForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const category = document.getElementById('teamCategory').value;
+  const name = document.getElementById('teamName').value.trim();
+  const bulk = document.getElementById('teamBulk').value.split('\n').map(s => s.trim()).filter(Boolean);
+  const names = name ? [name, ...bulk] : bulk;
+  if (!names.length) return;
+  const list = getTournaments();
+  const t = ensureTournamentData(list[selectedIndex]);
+  names.forEach(n => t.teams.push({ name: n, category }));
+  saveTournaments(list);
+  closeTeamModal();
+  render();
+});
+
+document.getElementById('teamCancelBtn').addEventListener('click', closeTeamModal);
+
+document.getElementById('teamModal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeTeamModal();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modals = [
+      { id: 'pickerModal', close: closePicker },
+      { id: 'formatModal', close: closeFormatModal },
+      { id: 'teamModal', close: closeTeamModal },
+      { id: 'modal', close: closeModal },
+    ];
+    for (const m of modals) {
+      if (document.getElementById(m.id).classList.contains('active')) {
+        m.close();
+        return;
+      }
+    }
+    if (view === 'detail') { view = 'list'; render(); }
+  }
+});
+
+render();
+</script>
+</body>
+</html>
