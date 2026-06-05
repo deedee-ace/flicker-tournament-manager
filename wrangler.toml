@@ -1,0 +1,7 @@
+name = "flicker-sync"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+# You'll need to set GITHUB_TOKEN as a secret:
+# wrangler secret put GITHUB_TOKEN

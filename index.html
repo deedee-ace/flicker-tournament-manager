@@ -1792,6 +1792,13 @@ header {
   gap: 2px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 20px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tab-bar::-webkit-scrollbar {
+  height: 0;
+  display: none;
 }
 
 .tab {
@@ -1808,6 +1815,8 @@ header {
   transition: all .25s ease;
   text-transform: uppercase;
   letter-spacing: .05em;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .tab:hover {
