@@ -99,6 +99,65 @@ header {
   text-transform: uppercase;
 }
 
+/* ─── Sync Indicator ─── */
+
+.sync-indicator {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--text-dim);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.sync-indicator.syncing {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.sync-indicator.synced {
+  border-color: #2A9D8F;
+  color: #2A9D8F;
+}
+
+.sync-indicator.error {
+  border-color: #E0707C;
+  color: #E0707C;
+}
+
+.sync-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-dim);
+}
+
+.sync-indicator.syncing .sync-dot {
+  background: var(--gold);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.sync-indicator.synced .sync-dot {
+  background: #2A9D8F;
+}
+
+.sync-indicator.error .sync-dot {
+  background: #E0707C;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
 .logo {
   display: inline-flex;
   align-items: center;
@@ -2495,6 +2554,10 @@ header {
 <body>
 
 <div class="app" id="app">
+  <div class="sync-indicator" id="syncIndicator">
+    <div class="sync-dot"></div>
+    <span class="sync-text">Offline</span>
+  </div>
   <header>
     <div class="logo">
       <span class="logo-shuttle">🏸</span>
@@ -2614,11 +2677,14 @@ header {
 
 <script>
 const STORAGE_KEY = 'flicker_tournaments';
+const SYNC_URL = 'https://flicker-sync.ryanace-ruiz.workers.dev';
 let view = 'list';
 let selectedIndex = 0;
 let tab = 'participants';
 let formatCat = '';
 let pickerCallback = null;
+let syncTimeout = null;
+let syncStatus = 'offline';
 
 function getTournaments() {
   try {
@@ -2630,6 +2696,69 @@ function getTournaments() {
 
 function saveTournaments(list) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  scheduleSync();
+}
+
+function scheduleSync() {
+  if (syncTimeout) clearTimeout(syncTimeout);
+  syncTimeout = setTimeout(pushToCloud, 2000);
+}
+
+function updateSyncIndicator(status, message) {
+  syncStatus = status;
+  const indicator = document.getElementById('syncIndicator');
+  const text = indicator.querySelector('.sync-text');
+  indicator.className = 'sync-indicator ' + status;
+  text.textContent = message || status.charAt(0).toUpperCase() + status.slice(1);
+}
+
+async function fetchFromCloud() {
+  try {
+    updateSyncIndicator('syncing', 'Syncing...');
+    const response = await fetch(SYNC_URL + '/data');
+    if (!response.ok) throw new Error('Fetch failed');
+    const data = await response.json();
+    if (Array.isArray(data) && data.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      updateSyncIndicator('synced', 'Synced');
+      return true;
+    } else {
+      updateSyncIndicator('offline', 'Offline');
+      return false;
+    }
+  } catch(e) {
+    console.log('Cloud fetch failed:', e.message);
+    updateSyncIndicator('offline', 'Offline');
+    return false;
+  }
+}
+
+async function pushToCloud() {
+  try {
+    updateSyncIndicator('syncing', 'Syncing...');
+    const data = getTournaments();
+    const response = await fetch(SYNC_URL + '/data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) throw new Error('Push failed');
+    updateSyncIndicator('synced', 'Synced');
+  } catch(e) {
+    console.log('Cloud push failed:', e.message);
+    updateSyncIndicator('error', 'Sync Error');
+  }
+}
+
+async function initApp() {
+  const hasData = await fetchFromCloud();
+  if (!hasData) {
+    const localData = getTournaments();
+    if (localData.length > 0) {
+      updateSyncIndicator('offline', 'Local Only');
+    }
+  }
+  render();
 }
 
 function ensureTournamentData(t) {
@@ -4585,7 +4714,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-render();
+initApp();
 </script>
 </body>
 </html>
