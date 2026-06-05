@@ -2718,10 +2718,12 @@ async function fetchFromCloud() {
     const response = await fetch(SYNC_URL + '/data');
     if (!response.ok) throw new Error('Fetch failed');
     const data = await response.json();
-    if (Array.isArray(data) && data.length > 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    if (Array.isArray(data)) {
+      if (data.length > 0) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      }
       updateSyncIndicator('synced', 'Synced');
-      return true;
+      return data.length > 0;
     } else {
       updateSyncIndicator('offline', 'Offline');
       return false;
