@@ -1,9 +1,904 @@
 [
   {
-    "name": "test",
+    "name": "joy",
     "venue": "",
-    "createdAt": 1780682858471,
-    "categories": [],
-    "teams": []
+    "createdAt": 1780607546063,
+    "categories": [
+      "Advanced",
+      "Mixed",
+      "Intermediate"
+    ],
+    "teams": [
+      {
+        "name": "Ishaan & Shashidhar",
+        "category": "Advanced"
+      },
+      {
+        "name": "Dhruv And Sree Pavan",
+        "category": "Advanced"
+      },
+      {
+        "name": "Ching & Rafa",
+        "category": "Advanced"
+      },
+      {
+        "name": "Rey & Lemuel",
+        "category": "Advanced"
+      },
+      {
+        "name": "Inigo & Sherwin",
+        "category": "Advanced"
+      },
+      {
+        "name": "Rosslyn & Joy",
+        "category": "Advanced"
+      },
+      {
+        "name": "Ragu & James",
+        "category": "Advanced"
+      },
+      {
+        "name": "Dennis & Dan",
+        "category": "Advanced"
+      },
+      {
+        "name": "Nienke & Laëtitia",
+        "category": "Advanced"
+      },
+      {
+        "name": "Jane & Ivy",
+        "category": "Intermediate"
+      },
+      {
+        "name": "Mayeh & Chellsy",
+        "category": "Intermediate"
+      },
+      {
+        "name": "Diana & Ericka",
+        "category": "Intermediate"
+      },
+      {
+        "name": "Lisa & Vickay",
+        "category": "Intermediate"
+      },
+      {
+        "name": "JM & Von",
+        "category": "Intermediate"
+      },
+      {
+        "name": "Ace & Mae",
+        "category": "Intermediate"
+      },
+      {
+        "name": "Grace & Ashera",
+        "category": "Intermediate"
+      },
+      {
+        "name": "Angel & Pabyo",
+        "category": "Intermediate"
+      },
+      {
+        "name": "Aeron & Joyce",
+        "category": "Intermediate"
+      },
+      {
+        "name": "Von A & Mattina",
+        "category": "Intermediate"
+      },
+      {
+        "name": "Jane & Rey",
+        "category": "Mixed"
+      },
+      {
+        "name": "Chellsy & Iñigo",
+        "category": "Mixed"
+      },
+      {
+        "name": "Ching & Mayeh",
+        "category": "Mixed"
+      },
+      {
+        "name": "Mattina & Lemuel",
+        "category": "Mixed"
+      },
+      {
+        "name": "Ace & Joy",
+        "category": "Mixed"
+      },
+      {
+        "name": "Rafa & Sherwin",
+        "category": "Mixed"
+      },
+      {
+        "name": "Rosslyn & Grace",
+        "category": "Mixed"
+      },
+      {
+        "name": "Dennis & Ashera",
+        "category": "Mixed"
+      },
+      {
+        "name": "Ragu & Ericka",
+        "category": "Mixed"
+      },
+      {
+        "name": "Dan & Ivy",
+        "category": "Mixed"
+      },
+      {
+        "name": "Bud & Jay",
+        "category": "Advanced"
+      }
+    ],
+    "formats": {
+      "Advanced": {
+        "phases": [
+          {
+            "name": "Group Stage",
+            "type": "group",
+            "groups": [
+              {
+                "name": "Group A",
+                "entries": [
+                  "Ragu & James",
+                  "Dhruv And Sree Pavan",
+                  "Ching & Rafa",
+                  "Rey & Lemuel",
+                  "Dennis & Dan"
+                ]
+              },
+              {
+                "name": "Group B",
+                "entries": [
+                  "Rosslyn & Joy",
+                  "Ishaan & Shashidhar",
+                  "Bud & Jay",
+                  "Inigo & Sherwin",
+                  "Nienke & Laëtitia"
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Phase 2",
+            "type": "bracket",
+            "groups": [],
+            "bracketTeams": 2,
+            "bracketLetter": "C",
+            "matches": [
+              {
+                "id": "match_1780650197545_1",
+                "name": "Match C1",
+                "label": "Final",
+                "slots": [
+                  {
+                    "placeholder": "1st of Group A"
+                  },
+                  {
+                    "placeholder": "1st of Group B"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "matchDuration": 10
+      },
+      "Mixed": {
+        "phases": [
+          {
+            "name": "Group Stage",
+            "type": "group",
+            "groups": [
+              {
+                "name": "Group A",
+                "entries": [
+                  "Jane & Rey",
+                  "Chellsy & Iñigo",
+                  "Dan & Ivy",
+                  "Mattina & Lemuel",
+                  "Ace & Joy"
+                ]
+              },
+              {
+                "name": "Group B",
+                "entries": [
+                  "Rafa & Sherwin",
+                  "Rosslyn & Grace",
+                  "Dennis & Ashera",
+                  "Ragu & Ericka",
+                  "Ching & Mayeh"
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Phase 2",
+            "type": "bracket",
+            "groups": [],
+            "bracketTeams": 2,
+            "bracketLetter": "C",
+            "matches": [
+              {
+                "id": "match_1780651061949_1",
+                "name": "Match C1",
+                "label": "Final",
+                "slots": [
+                  {
+                    "placeholder": "1st of Group A"
+                  },
+                  {
+                    "placeholder": "1st of Group B"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "matchDuration": 12
+      },
+      "Intermediate": {
+        "phases": [
+          {
+            "name": "Group Stage",
+            "type": "group",
+            "groups": [
+              {
+                "name": "Group A",
+                "entries": [
+                  "Jane & Ivy",
+                  "Mayeh & Chellsy",
+                  "Diana & Ericka",
+                  "Lisa & Vickay",
+                  "JM & Von"
+                ]
+              },
+              {
+                "name": "Group B",
+                "entries": [
+                  "Ace & Mae",
+                  "Grace & Ashera",
+                  "Angel & Pabyo",
+                  "Aeron & Joyce",
+                  "Von A & Mattina"
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Phase 2",
+            "type": "bracket",
+            "groups": [],
+            "bracketTeams": 2,
+            "bracketLetter": "C",
+            "matches": [
+              {
+                "id": "match_1780651071159_1",
+                "name": "Match C1",
+                "label": "Final",
+                "slots": [
+                  {
+                    "placeholder": "1st of Group A"
+                  },
+                  {
+                    "placeholder": "1st of Group B"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "matchDuration": 12
+      }
+    },
+    "schedule": {
+      "fields": [
+        {
+          "id": "field_1780616846151",
+          "name": "Court 1",
+          "startTime": "12:00"
+        },
+        {
+          "id": "field_1780616904635",
+          "name": "Court 2",
+          "startTime": "12:00"
+        }
+      ],
+      "matches": [
+        {
+          "id": "match_1780682229926_waah0ceex",
+          "fieldId": "field_1780616846151",
+          "time": "12:00",
+          "team1": "Ragu & James",
+          "team2": "Dhruv And Sree Pavan",
+          "category": "Advanced",
+          "group": "Group A",
+          "status": null,
+          "score1": null,
+          "score2": null
+        },
+        {
+          "id": "match_1780682229926_t6bokxgrm",
+          "fieldId": "field_1780616846151",
+          "time": "12:10",
+          "team1": "Ching & Rafa",
+          "team2": "Rey & Lemuel",
+          "category": "Advanced",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682229926_4m80iiulu",
+          "fieldId": "field_1780616846151",
+          "time": "12:20",
+          "team1": "Ragu & James",
+          "team2": "Dennis & Dan",
+          "category": "Advanced",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682229926_uasbxgvxy",
+          "fieldId": "field_1780616846151",
+          "time": "12:30",
+          "team1": "Dhruv And Sree Pavan",
+          "team2": "Ching & Rafa",
+          "category": "Advanced",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682229926_m6othkdr2",
+          "fieldId": "field_1780616846151",
+          "time": "12:40",
+          "team1": "Ragu & James",
+          "team2": "Rey & Lemuel",
+          "category": "Advanced",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682229926_8bmg3wh39",
+          "fieldId": "field_1780616846151",
+          "time": "12:50",
+          "team1": "Dhruv And Sree Pavan",
+          "team2": "Dennis & Dan",
+          "category": "Advanced",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682229926_fbavtd0ri",
+          "fieldId": "field_1780616846151",
+          "time": "13:00",
+          "team1": "Ragu & James",
+          "team2": "Ching & Rafa",
+          "category": "Advanced",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682229926_huo15gm1s",
+          "fieldId": "field_1780616846151",
+          "time": "13:10",
+          "team1": "Dhruv And Sree Pavan",
+          "team2": "Rey & Lemuel",
+          "category": "Advanced",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682229926_bu1siqujn",
+          "fieldId": "field_1780616846151",
+          "time": "13:20",
+          "team1": "Ching & Rafa",
+          "team2": "Dennis & Dan",
+          "category": "Advanced",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682229926_57j3s4zej",
+          "fieldId": "field_1780616846151",
+          "time": "13:30",
+          "team1": "Rey & Lemuel",
+          "team2": "Dennis & Dan",
+          "category": "Advanced",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682264369_s7phhs9if",
+          "fieldId": "field_1780616904635",
+          "time": "13:00",
+          "team1": "Rosslyn & Joy",
+          "team2": "Ishaan & Shashidhar",
+          "category": "Advanced",
+          "group": "Group B",
+          "status": null,
+          "score1": null,
+          "score2": null
+        },
+        {
+          "id": "match_1780682264369_mrb1ejjxn",
+          "fieldId": "field_1780616904635",
+          "time": "12:00",
+          "team1": "Bud & Jay",
+          "team2": "Inigo & Sherwin",
+          "category": "Advanced",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682264369_rwgju0iov",
+          "fieldId": "field_1780616904635",
+          "time": "13:30",
+          "team1": "Rosslyn & Joy",
+          "team2": "Nienke & Laëtitia",
+          "category": "Advanced",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682264369_9u7d0ysxq",
+          "fieldId": "field_1780616904635",
+          "time": "12:10",
+          "team1": "Ishaan & Shashidhar",
+          "team2": "Bud & Jay",
+          "category": "Advanced",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682264369_8w858f9hp",
+          "fieldId": "field_1780616904635",
+          "time": "13:10",
+          "team1": "Rosslyn & Joy",
+          "team2": "Inigo & Sherwin",
+          "category": "Advanced",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682264369_tn1597cbv",
+          "fieldId": "field_1780616904635",
+          "time": "12:20",
+          "team1": "Ishaan & Shashidhar",
+          "team2": "Nienke & Laëtitia",
+          "category": "Advanced",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682264369_6fhp3ym4p",
+          "fieldId": "field_1780616904635",
+          "time": "13:20",
+          "team1": "Rosslyn & Joy",
+          "team2": "Bud & Jay",
+          "category": "Advanced",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682264369_hwz9yo9tu",
+          "fieldId": "field_1780616904635",
+          "time": "12:40",
+          "team1": "Ishaan & Shashidhar",
+          "team2": "Inigo & Sherwin",
+          "category": "Advanced",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682264369_nci2py6np",
+          "fieldId": "field_1780616904635",
+          "time": "12:50",
+          "team1": "Bud & Jay",
+          "team2": "Nienke & Laëtitia",
+          "category": "Advanced",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682264369_6ea654sui",
+          "fieldId": "field_1780616904635",
+          "time": "12:30",
+          "team1": "Inigo & Sherwin",
+          "team2": "Nienke & Laëtitia",
+          "category": "Advanced",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780650197545_1",
+          "fieldId": "field_1780616846151",
+          "time": "13:40",
+          "team1": "1st of Group A",
+          "team2": "1st of Group B",
+          "category": "Advanced",
+          "group": "Match C1",
+          "isBracketMatch": true,
+          "bracketLabel": "Final"
+        },
+        {
+          "id": "break_1780682364799_mu6ntcd8j",
+          "fieldId": "field_1780616904635",
+          "time": "13:40",
+          "isBreak": true,
+          "duration": 10
+        },
+        {
+          "id": "match_1780682376581_x68qkewuc",
+          "fieldId": "field_1780616846151",
+          "time": "13:50",
+          "team1": "Jane & Ivy",
+          "team2": "Mayeh & Chellsy",
+          "category": "Intermediate",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682376581_jnpq8oav4",
+          "fieldId": "field_1780616846151",
+          "time": "14:02",
+          "team1": "Diana & Ericka",
+          "team2": "Lisa & Vickay",
+          "category": "Intermediate",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682376581_tj1mfzpbj",
+          "fieldId": "field_1780616846151",
+          "time": "14:14",
+          "team1": "Jane & Ivy",
+          "team2": "JM & Von",
+          "category": "Intermediate",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682376581_0zochxwha",
+          "fieldId": "field_1780616846151",
+          "time": "14:26",
+          "team1": "Mayeh & Chellsy",
+          "team2": "Diana & Ericka",
+          "category": "Intermediate",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682376581_x4btjxdw5",
+          "fieldId": "field_1780616846151",
+          "time": "14:38",
+          "team1": "Jane & Ivy",
+          "team2": "Lisa & Vickay",
+          "category": "Intermediate",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682376581_td94lnor1",
+          "fieldId": "field_1780616846151",
+          "time": "14:50",
+          "team1": "Mayeh & Chellsy",
+          "team2": "JM & Von",
+          "category": "Intermediate",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682376581_j9esgf7be",
+          "fieldId": "field_1780616846151",
+          "time": "15:02",
+          "team1": "Jane & Ivy",
+          "team2": "Diana & Ericka",
+          "category": "Intermediate",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682376581_oyle3f252",
+          "fieldId": "field_1780616846151",
+          "time": "15:14",
+          "team1": "Mayeh & Chellsy",
+          "team2": "Lisa & Vickay",
+          "category": "Intermediate",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682376581_4ud4o3bt1",
+          "fieldId": "field_1780616846151",
+          "time": "15:26",
+          "team1": "Diana & Ericka",
+          "team2": "JM & Von",
+          "category": "Intermediate",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682376581_h6batdt3k",
+          "fieldId": "field_1780616846151",
+          "time": "15:38",
+          "team1": "Lisa & Vickay",
+          "team2": "JM & Von",
+          "category": "Intermediate",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682387638_yezhj98or",
+          "fieldId": "field_1780616904635",
+          "time": "13:50",
+          "team1": "Ace & Mae",
+          "team2": "Grace & Ashera",
+          "category": "Intermediate",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682387638_lrznt0or4",
+          "fieldId": "field_1780616904635",
+          "time": "14:00",
+          "team1": "Angel & Pabyo",
+          "team2": "Aeron & Joyce",
+          "category": "Intermediate",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682387638_wkghd9j7m",
+          "fieldId": "field_1780616904635",
+          "time": "14:10",
+          "team1": "Ace & Mae",
+          "team2": "Von A & Mattina",
+          "category": "Intermediate",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682387638_0tf147euk",
+          "fieldId": "field_1780616904635",
+          "time": "14:20",
+          "team1": "Grace & Ashera",
+          "team2": "Angel & Pabyo",
+          "category": "Intermediate",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682387638_de6uzdkwb",
+          "fieldId": "field_1780616904635",
+          "time": "14:30",
+          "team1": "Ace & Mae",
+          "team2": "Aeron & Joyce",
+          "category": "Intermediate",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682387638_6eokvos4w",
+          "fieldId": "field_1780616904635",
+          "time": "14:40",
+          "team1": "Grace & Ashera",
+          "team2": "Von A & Mattina",
+          "category": "Intermediate",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682387638_bmbxzo33x",
+          "fieldId": "field_1780616904635",
+          "time": "14:50",
+          "team1": "Ace & Mae",
+          "team2": "Angel & Pabyo",
+          "category": "Intermediate",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682387638_pxzkrrfcn",
+          "fieldId": "field_1780616904635",
+          "time": "15:00",
+          "team1": "Grace & Ashera",
+          "team2": "Aeron & Joyce",
+          "category": "Intermediate",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682387638_tepcd8um8",
+          "fieldId": "field_1780616904635",
+          "time": "15:10",
+          "team1": "Angel & Pabyo",
+          "team2": "Von A & Mattina",
+          "category": "Intermediate",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682387638_sg0pz3urk",
+          "fieldId": "field_1780616904635",
+          "time": "15:20",
+          "team1": "Aeron & Joyce",
+          "team2": "Von A & Mattina",
+          "category": "Intermediate",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780651071159_1",
+          "fieldId": "field_1780616846151",
+          "time": "15:50",
+          "team1": "1st of Group A",
+          "team2": "1st of Group B",
+          "category": "Intermediate",
+          "group": "Match C1",
+          "isBracketMatch": true,
+          "bracketLabel": "Final"
+        },
+        {
+          "id": "break_1780682412319_42qsrcckh",
+          "fieldId": "field_1780616904635",
+          "time": "15:30",
+          "isBreak": true,
+          "duration": 12
+        },
+        {
+          "id": "match_1780682471062_31pcwpuoo",
+          "fieldId": "field_1780616846151",
+          "time": "16:02",
+          "team1": "Jane & Rey",
+          "team2": "Chellsy & Iñigo",
+          "category": "Mixed",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682471062_tn2zdotgs",
+          "fieldId": "field_1780616846151",
+          "time": "16:14",
+          "team1": "Dan & Ivy",
+          "team2": "Mattina & Lemuel",
+          "category": "Mixed",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682471062_wvs6b7nhx",
+          "fieldId": "field_1780616846151",
+          "time": "16:26",
+          "team1": "Jane & Rey",
+          "team2": "Ace & Joy",
+          "category": "Mixed",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682471062_yyxdl4912",
+          "fieldId": "field_1780616846151",
+          "time": "16:38",
+          "team1": "Chellsy & Iñigo",
+          "team2": "Dan & Ivy",
+          "category": "Mixed",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682471062_xm18pte8k",
+          "fieldId": "field_1780616846151",
+          "time": "16:50",
+          "team1": "Jane & Rey",
+          "team2": "Mattina & Lemuel",
+          "category": "Mixed",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682471062_onstjvow4",
+          "fieldId": "field_1780616846151",
+          "time": "17:02",
+          "team1": "Chellsy & Iñigo",
+          "team2": "Ace & Joy",
+          "category": "Mixed",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682471062_e6y76w4wd",
+          "fieldId": "field_1780616846151",
+          "time": "17:14",
+          "team1": "Jane & Rey",
+          "team2": "Dan & Ivy",
+          "category": "Mixed",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682471062_l13286zce",
+          "fieldId": "field_1780616846151",
+          "time": "17:26",
+          "team1": "Chellsy & Iñigo",
+          "team2": "Mattina & Lemuel",
+          "category": "Mixed",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682471062_dz3mtznvd",
+          "fieldId": "field_1780616846151",
+          "time": "17:38",
+          "team1": "Dan & Ivy",
+          "team2": "Ace & Joy",
+          "category": "Mixed",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682471062_lu4a311m0",
+          "fieldId": "field_1780616846151",
+          "time": "17:50",
+          "team1": "Mattina & Lemuel",
+          "team2": "Ace & Joy",
+          "category": "Mixed",
+          "group": "Group A"
+        },
+        {
+          "id": "match_1780682482925_6ocxr2y72",
+          "fieldId": "field_1780616904635",
+          "time": "15:40",
+          "team1": "Rafa & Sherwin",
+          "team2": "Rosslyn & Grace",
+          "category": "Mixed",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682482925_oqizzbch2",
+          "fieldId": "field_1780616904635",
+          "time": "15:50",
+          "team1": "Dennis & Ashera",
+          "team2": "Ragu & Ericka",
+          "category": "Mixed",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682482925_wtcnwb02o",
+          "fieldId": "field_1780616904635",
+          "time": "16:00",
+          "team1": "Rafa & Sherwin",
+          "team2": "Ching & Mayeh",
+          "category": "Mixed",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682482925_mwhauk7jc",
+          "fieldId": "field_1780616904635",
+          "time": "16:10",
+          "team1": "Rosslyn & Grace",
+          "team2": "Dennis & Ashera",
+          "category": "Mixed",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682482925_n6mhs16hg",
+          "fieldId": "field_1780616904635",
+          "time": "16:20",
+          "team1": "Rafa & Sherwin",
+          "team2": "Ragu & Ericka",
+          "category": "Mixed",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682482925_u8zbiefhs",
+          "fieldId": "field_1780616904635",
+          "time": "16:30",
+          "team1": "Rosslyn & Grace",
+          "team2": "Ching & Mayeh",
+          "category": "Mixed",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682482925_zgfodv1x9",
+          "fieldId": "field_1780616904635",
+          "time": "16:40",
+          "team1": "Rafa & Sherwin",
+          "team2": "Dennis & Ashera",
+          "category": "Mixed",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682482925_j9oda6lty",
+          "fieldId": "field_1780616904635",
+          "time": "16:50",
+          "team1": "Rosslyn & Grace",
+          "team2": "Ragu & Ericka",
+          "category": "Mixed",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682482925_5s0n6qrw8",
+          "fieldId": "field_1780616904635",
+          "time": "17:00",
+          "team1": "Dennis & Ashera",
+          "team2": "Ching & Mayeh",
+          "category": "Mixed",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780682482925_xxkxbk16a",
+          "fieldId": "field_1780616904635",
+          "time": "17:10",
+          "team1": "Ragu & Ericka",
+          "team2": "Ching & Mayeh",
+          "category": "Mixed",
+          "group": "Group B"
+        },
+        {
+          "id": "match_1780651061949_1",
+          "fieldId": "field_1780616846151",
+          "time": "18:02",
+          "team1": "1st of Group A",
+          "team2": "1st of Group B",
+          "category": "Mixed",
+          "group": "Match C1",
+          "isBracketMatch": true,
+          "bracketLabel": "Final"
+        }
+      ]
+    }
   }
 ]
