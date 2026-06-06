@@ -921,7 +921,10 @@
           "team1": "Rafa & Sherwin",
           "team2": "Rosslyn & Grace",
           "category": "Mixed",
-          "group": "Group B"
+          "group": "Group B",
+          "status": "ongoing",
+          "score1": 0,
+          "score2": 0
         },
         {
           "id": "match_1780682482925_oqizzbch2",
