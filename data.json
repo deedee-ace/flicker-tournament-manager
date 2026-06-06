@@ -554,7 +554,10 @@
           "category": "Advanced",
           "group": "Match C1",
           "isBracketMatch": true,
-          "bracketLabel": "Final"
+          "bracketLabel": "Final",
+          "status": "ongoing",
+          "score1": 0,
+          "score2": 0
         },
         {
           "id": "break_1780682364799_mu6ntcd8j",
