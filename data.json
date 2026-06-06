@@ -955,7 +955,9 @@
           "team2": "Ching & Mayeh",
           "category": "Mixed",
           "group": "Group B",
-          "score1": 21
+          "score1": 21,
+          "score2": 18,
+          "status": "completed"
         },
         {
           "id": "match_1780682482925_mwhauk7jc",
