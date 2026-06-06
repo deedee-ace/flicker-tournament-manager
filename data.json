@@ -633,7 +633,10 @@
           "team1": "Mayeh & Chellsy",
           "team2": "JM & Von",
           "category": "Intermediate",
-          "group": "Group A"
+          "group": "Group A",
+          "status": "ongoing",
+          "score1": 0,
+          "score2": 0
         },
         {
           "id": "match_1780682376581_j9esgf7be",
