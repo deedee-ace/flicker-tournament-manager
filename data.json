@@ -313,9 +313,9 @@
           "team2": "Dhruv And Sree Pavan",
           "category": "Advanced",
           "group": "Group A",
-          "status": null,
-          "score1": null,
-          "score2": null
+          "status": "ongoing",
+          "score1": 0,
+          "score2": 0
         },
         {
           "id": "match_1780682229926_t6bokxgrm",
@@ -325,9 +325,9 @@
           "team2": "Rey & Lemuel",
           "category": "Advanced",
           "group": "Group A",
-          "status": "ongoing",
+          "status": "completed",
           "score1": 21,
-          "score2": 21
+          "score2": 10
         },
         {
           "id": "match_1780682229926_4m80iiulu",
