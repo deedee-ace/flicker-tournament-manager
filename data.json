@@ -1023,7 +1023,10 @@
           "team1": "Rosslyn & Grace",
           "team2": "Ragu & Ericka",
           "category": "Mixed",
-          "group": "Group B"
+          "group": "Group B",
+          "status": "ongoing",
+          "score1": 0,
+          "score2": 0
         },
         {
           "id": "match_1780682482925_5s0n6qrw8",
