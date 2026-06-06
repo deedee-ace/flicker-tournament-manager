@@ -336,7 +336,10 @@
           "team1": "Ragu & James",
           "team2": "Dennis & Dan",
           "category": "Advanced",
-          "group": "Group A"
+          "group": "Group A",
+          "status": "ongoing",
+          "score1": 0,
+          "score2": 0
         },
         {
           "id": "match_1780682229926_uasbxgvxy",
