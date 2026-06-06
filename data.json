@@ -1038,7 +1038,10 @@
           "team1": "Dennis & Ashera",
           "team2": "Ching & Mayeh",
           "category": "Mixed",
-          "group": "Group B"
+          "group": "Group B",
+          "status": "completed",
+          "score1": 0,
+          "score2": 0
         },
         {
           "id": "match_1780682482925_xxkxbk16a",
