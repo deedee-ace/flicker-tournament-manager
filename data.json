@@ -940,7 +940,9 @@
           "team2": "Ace & Joy",
           "category": "Mixed",
           "group": "Group A",
-          "score1": 21
+          "score1": 21,
+          "score2": 20,
+          "status": "completed"
         },
         {
           "id": "match_1780682482925_6ocxr2y72",
