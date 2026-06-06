@@ -675,7 +675,10 @@
           "team1": "Angel & Pabyo",
           "team2": "Aeron & Joyce",
           "category": "Intermediate",
-          "group": "Group B"
+          "group": "Group B",
+          "status": "ongoing",
+          "score1": 0,
+          "score2": 0
         },
         {
           "id": "match_1780682387638_wkghd9j7m",
