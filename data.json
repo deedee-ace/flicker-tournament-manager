@@ -645,7 +645,10 @@
           "team1": "Jane & Ivy",
           "team2": "Diana & Ericka",
           "category": "Intermediate",
-          "group": "Group A"
+          "group": "Group A",
+          "status": "ongoing",
+          "score1": 0,
+          "score2": 0
         },
         {
           "id": "match_1780682376581_oyle3f252",
@@ -730,9 +733,9 @@
           "team2": "Aeron & Joyce",
           "category": "Intermediate",
           "group": "Group B",
-          "score1": 0,
+          "score1": 15,
           "score2": 18,
-          "status": "ongoing"
+          "status": "completed"
         },
         {
           "id": "match_1780682387638_6eokvos4w",
@@ -741,7 +744,10 @@
           "team1": "Grace & Ashera",
           "team2": "Von A & Mattina",
           "category": "Intermediate",
-          "group": "Group B"
+          "group": "Group B",
+          "status": "ongoing",
+          "score1": 0,
+          "score2": 0
         },
         {
           "id": "match_1780682387638_bmbxzo33x",
